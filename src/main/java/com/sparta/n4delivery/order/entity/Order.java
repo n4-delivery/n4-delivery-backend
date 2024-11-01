@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.order.entity;
 
+import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.enums.OrderState;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.store.entity.Store;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
