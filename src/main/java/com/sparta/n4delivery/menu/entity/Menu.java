@@ -30,5 +30,6 @@ public class Menu {
     private Integer price;
 
     @Enumerated(value = EnumType.STRING)
-    private MenuState state;
+    @Builder.Default
+    private MenuState state = MenuState.SALE;
 }

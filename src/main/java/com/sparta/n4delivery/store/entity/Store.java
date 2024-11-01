@@ -4,6 +4,7 @@ package com.sparta.n4delivery.store.entity;
 import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.order.entity.Order;
+import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,17 +34,18 @@ public class Store {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(updatable = false)
+    @Column(nullable = false)
     private LocalDateTime openedAt;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime closedAt;
 
-    @Column
+    @Column(nullable = false)
     private Integer minimumAmount;
 
     @Enumerated(value = EnumType.STRING)
-    private StoreState state;
+    @Builder.Default
+    private StoreState state = StoreState.OPEN;
 
     @OneToMany(mappedBy = "store",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
@@ -54,4 +56,9 @@ public class Store {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 }

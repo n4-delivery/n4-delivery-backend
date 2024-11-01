@@ -2,6 +2,8 @@ package com.sparta.n4delivery.user.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.enums.AuthType;
+import com.sparta.n4delivery.order.entity.Order;
+import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,7 +41,8 @@ public class User extends Timestamped {
     private String nickname;
 
     @Enumerated(value = EnumType.STRING)
-    private AuthType type;
+    @Builder.Default
+    private AuthType type = AuthType.USER;
 
     @Column(updatable = false)
     private LocalDateTime deletedAt;
@@ -48,4 +51,14 @@ public class User extends Timestamped {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     private List<Store> stories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 }

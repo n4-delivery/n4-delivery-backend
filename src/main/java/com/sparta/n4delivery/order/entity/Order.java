@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -29,13 +32,15 @@ public class Order {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id")
-    private Menu menu;
-
     @Column
     private Integer price;
 
     @Enumerated(value = EnumType.STRING)
-    private OrderState state;
+    @Builder.Default
+    private OrderState state = OrderState.COOKING;
+
+    @OneToMany(mappedBy = "order",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<OrderDetails> orderDetails = new ArrayList<>();
 }
