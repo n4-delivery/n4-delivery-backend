@@ -29,7 +29,7 @@ import java.util.List;
 public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String email;
@@ -50,15 +50,18 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
-    private List<Store> stories = new ArrayList<>();
+    @Builder.Default
+    private List<Store> stores = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

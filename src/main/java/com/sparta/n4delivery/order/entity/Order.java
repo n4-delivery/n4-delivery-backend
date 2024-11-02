@@ -2,14 +2,10 @@ package com.sparta.n4delivery.order.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.enums.OrderState;
-import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +19,7 @@ import java.util.List;
 public class Order extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -33,8 +29,9 @@ public class Order extends Timestamped {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Setter
     @Column
-    private Integer price;
+    private Integer totalPrice;
 
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
@@ -43,5 +40,6 @@ public class Order extends Timestamped {
     @OneToMany(mappedBy = "order",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<OrderDetails> orderDetails = new ArrayList<>();
 }

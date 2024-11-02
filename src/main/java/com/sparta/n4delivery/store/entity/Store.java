@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -35,10 +35,10 @@ public class Store {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime openedAt;
+    private LocalTime openedAt;
 
     @Column(nullable = false)
-    private LocalDateTime closedAt;
+    private LocalTime closedAt;
 
     @Column(nullable = false)
     private Integer minimumAmount;
@@ -50,15 +50,18 @@ public class Store {
     @OneToMany(mappedBy = "store",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<Menu> menus = new ArrayList<>();
 
     @OneToMany(mappedBy = "store",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "store",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

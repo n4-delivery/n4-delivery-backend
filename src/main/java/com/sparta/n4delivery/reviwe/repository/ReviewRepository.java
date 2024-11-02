@@ -1,4 +1,7 @@
 package com.sparta.n4delivery.reviwe.repository;
 
-public class ReviewRepository {
+import com.sparta.n4delivery.reviwe.entity.Review;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReviewRepository extends JpaRepository<Review, Long> {
 }
