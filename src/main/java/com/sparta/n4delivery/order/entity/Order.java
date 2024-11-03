@@ -35,7 +35,7 @@ public class Order extends Timestamped {
 
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
-    private OrderState state = OrderState.COOKING;
+    private OrderState state = OrderState.REQUEST;
 
     @OneToMany(mappedBy = "order",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},

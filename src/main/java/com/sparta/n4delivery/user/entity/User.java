@@ -1,7 +1,7 @@
 package com.sparta.n4delivery.user.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
-import com.sparta.n4delivery.enums.AuthType;
+import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.store.entity.Store;
@@ -42,7 +42,7 @@ public class User extends Timestamped {
 
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
-    private AuthType type = AuthType.USER;
+    private UserType type = UserType.USER;
 
     @Column(updatable = false)
     private LocalDateTime deletedAt;

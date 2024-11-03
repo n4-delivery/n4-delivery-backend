@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.reviwe.entity;
 
+import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @Entity
 @Table(name = "review")
-public class Review {
+public class Review extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,6 +38,6 @@ public class Review {
     @ColumnDefault("3")
     private Double score;
 
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String comment;
 }

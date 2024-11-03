@@ -1,6 +1,6 @@
 package com.sparta.n4delivery;
 
-import com.sparta.n4delivery.enums.AuthType;
+import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.order.entity.Order;
@@ -69,7 +69,7 @@ class N4DeliveryApplicationTests {
                     .email(randomName + "@gmail.com")
                     .password("1234")
                     .nickname(randomName)
-                    .type(AuthType.OWNER)
+                    .type(UserType.OWNER)
                     .build());
         }
         userRepository.saveAll(users);
