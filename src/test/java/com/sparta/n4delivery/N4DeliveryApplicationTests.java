@@ -4,7 +4,7 @@ import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.order.entity.Order;
-import com.sparta.n4delivery.order.entity.OrderDetails;
+import com.sparta.n4delivery.order.entity.OrderDetail;
 import com.sparta.n4delivery.order.repository.OrderDetailsRepository;
 import com.sparta.n4delivery.order.repository.OrderRepository;
 import com.sparta.n4delivery.reviwe.entity.Review;
@@ -117,7 +117,7 @@ class N4DeliveryApplicationTests {
             }
         }
 
-        List<OrderDetails> orderDetails = new ArrayList<>();
+        List<OrderDetail> orderDetails = new ArrayList<>();
         for (Order order : orders) {
             Store store = order.getStore();
             int totalPrice = 0;
@@ -125,7 +125,7 @@ class N4DeliveryApplicationTests {
                 List<Menu> storeMenus = store.getMenus();
                 Menu menu = storeMenus.get((int) (Math.random() * storeMenus.size()));
                 int menuCnt = (int) (Math.random() * 10 + 1);
-                orderDetails.add(OrderDetails.builder()
+                orderDetails.add(OrderDetail.builder()
                         .order(order)
                         .menu(menu)
                         .count(menuCnt)
