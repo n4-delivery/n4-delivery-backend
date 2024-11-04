@@ -15,5 +15,5 @@ public class MenuRequestDto {
     @Min(value = 100, message = "가격은 100원 이상이어야 합니다.")
     private Integer price;
 
-    private Long userId;
+    private Long userId; // JWT 생성 전 임시 userId
 }

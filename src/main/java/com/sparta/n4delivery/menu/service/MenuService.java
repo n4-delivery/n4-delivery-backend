@@ -8,7 +8,6 @@ import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.repository.StoreRepository;
-import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ public class MenuService {
 
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
-
 
         if (!store.getUser().getId().equals(menuRequestDto.getUserId())) {
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);

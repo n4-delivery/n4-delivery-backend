@@ -2,7 +2,6 @@ package com.sparta.n4delivery.store.controller;
 
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
 import com.sparta.n4delivery.menu.service.MenuService;
-import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
