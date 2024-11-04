@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 주문 메뉴에 대한 엔티티 클래스
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @Builder
 @NoArgsConstructor

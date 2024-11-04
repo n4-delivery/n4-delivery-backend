@@ -23,6 +23,13 @@ public class OrderDetailResponseDto {
     private Integer count;
     private Integer price;
 
+    /**
+     * 조회 결과를 기반으로 응답 DTO 생성
+     *
+     * @param orderDetail OrderDetail 엔티티 객체
+     * @return 생성된 응답 DTO 객체
+     * @since 2024-11-05
+     */
     public static OrderDetailResponseDto createResponseDto(OrderDetail orderDetail) {
         OrderDetailResponseDto orderDetailResponseDto = new OrderDetailResponseDto();
         orderDetailResponseDto.setId(orderDetail.getId());
