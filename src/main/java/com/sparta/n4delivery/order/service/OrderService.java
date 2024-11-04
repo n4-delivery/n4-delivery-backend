@@ -7,7 +7,7 @@ import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.order.dto.request.RequestCreateOrderDetailDto;
 import com.sparta.n4delivery.order.dto.request.RequestCreateOrderDto;
-import com.sparta.n4delivery.order.dto.response.ResponseCreateOrderDto;
+import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.order.entity.OrderDetail;
 import com.sparta.n4delivery.order.repository.OrderDetailsRepository;
@@ -37,17 +37,17 @@ public class OrderService {
     private final OrderDetailsRepository orderDetailsRepository;
 
     @Transactional
-    public ResponseCreateOrderDto createOrder(HttpServletRequest req, Long storeId, RequestCreateOrderDto requestDto) {
+    public OrderResponseDto createOrder(HttpServletRequest req, Long storeId, RequestCreateOrderDto requestDto) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).build();
         Store store = findStore(storeId);
-        List<Menu> menus = searchOrderMenus(requestDto.getOrderMenus());
+        List<Menu> menus = searchOrderMenus(requestDto.getOrderDetails());
 
         Order order = requestDto.convertDtoToEntity(user, store);
         orderRepository.save(order);
         List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
         orderDetailsRepository.saveAll(orderDetails);
-        return ResponseCreateOrderDto.createResponseDto(order.getId(), req.getRequestURI());
+        return OrderResponseDto.createResponseDto(order, orderDetails);
     }
 
     public Store findStore(Long storeId) {
@@ -55,12 +55,14 @@ public class OrderService {
                 () -> new ResponseException(ResponseCode.NOT_FOUND_STORE)
         );
 
-        if (store.getState() == StoreState.CLOSE)
-            throw new ResponseException(ResponseCode.NOT_OPEN_STORE);
+        if (store.getState() == StoreState.CLOSE) {
+            throw new ResponseException(ResponseCode.CLOSED_STORE);
+        }
 
         LocalTime now = LocalTime.now();
-        if (!now.isAfter(store.getOpenedAt()) || !now.isBefore(store.getClosedAt()))
-            throw new ResponseException(ResponseCode.NOT_OPEN_STORE);
+        if (!now.isAfter(store.getOpenedAt()) || !now.isBefore(store.getClosedAt())) {
+            throw new ResponseException(ResponseCode.CLOSED_STORE);
+        }
 
         return store;
     }

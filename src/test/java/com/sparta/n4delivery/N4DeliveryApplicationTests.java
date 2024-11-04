@@ -188,7 +188,7 @@ class N4DeliveryApplicationTests {
                         .name(randomName)
                         .state(idx % 2 == 0 ? StoreState.OPEN : StoreState.CLOSE)
                         .openedAt(LocalTime.of(9, 0))
-                        .closedAt(LocalTime.of(22, 0))
+                        .closedAt(LocalTime.of(23, 59))
                         .minimumAmount(5000)
                         .build());
             }

@@ -77,7 +77,7 @@ public enum ResponseCode {
     // === MG ===
 
     // === HJ ===
-    NOT_OPEN_STORE(HttpStatus.FORBIDDEN, "가게가 오픈 상태가 아닙니다.");
+    CLOSED_STORE(HttpStatus.BAD_REQUEST, "가게가 오픈 상태가 아닙니다.");
     // ===
 
     private final HttpStatus httpStatus;

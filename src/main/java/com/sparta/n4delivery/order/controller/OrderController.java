@@ -1,16 +1,13 @@
 package com.sparta.n4delivery.order.controller;
 
-import com.sparta.n4delivery.order.dto.request.RequestCreateOrderDetailDto;
 import com.sparta.n4delivery.order.dto.request.RequestCreateOrderDto;
-import com.sparta.n4delivery.order.dto.response.ResponseCreateOrderDto;
+import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 주문 컨트롤러 클래스
@@ -24,7 +21,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/stores/{storeId}/orders")
-    public ResponseEntity<ResponseCreateOrderDto> createOrder(
+    public ResponseEntity<OrderResponseDto> createOrder(
             HttpServletRequest req,
             @PathVariable Long storeId,
             @RequestBody RequestCreateOrderDto requestDto) {

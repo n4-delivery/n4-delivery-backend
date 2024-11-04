@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class RequestCreateOrderDto {
-    List<RequestCreateOrderDetailDto> orderMenus;
+    List<RequestCreateOrderDetailDto> orderDetails;
 
     /**
      * DTO 객체를 엔티티 객체로 변환
@@ -34,7 +34,7 @@ public class RequestCreateOrderDto {
     public List<OrderDetail> convertEntityToDto(Order order, List<Menu> menus) {
         int totalPrice = 0;
         List<OrderDetail> orderDetails = new ArrayList<>();
-        for (RequestCreateOrderDetailDto orderMenu : orderMenus) {
+        for (RequestCreateOrderDetailDto orderMenu : this.orderDetails) {
             for (Menu menu : menus) {
                 if (menu.getId().equals(orderMenu.getMenuId())) {
                     totalPrice += menu.getPrice() * orderMenu.getCount();
