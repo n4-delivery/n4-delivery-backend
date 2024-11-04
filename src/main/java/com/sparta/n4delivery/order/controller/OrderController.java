@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.order.controller;
 
+import com.sparta.n4delivery.common.dto.PageResponseDto;
 import com.sparta.n4delivery.order.dto.request.RequestCreateOrderDto;
 import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.service.OrderService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 주문 컨트롤러 클래스
@@ -28,5 +31,25 @@ public class OrderController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(orderService.createOrder(req, storeId, requestDto));
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<PageResponseDto<List<OrderResponseDto>>> searchOrders(
+            HttpServletRequest req,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderService.searchOrders(req, page - 1, size));
+    }
+
+    @GetMapping("/stores/{storeId}/orders")
+    public ResponseEntity<PageResponseDto<List<OrderResponseDto>>> searchOrders(
+            @PathVariable Long storeId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderService.searchOrders(storeId, page - 1, size));
     }
 }
