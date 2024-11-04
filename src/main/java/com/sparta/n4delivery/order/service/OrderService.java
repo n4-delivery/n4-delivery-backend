@@ -114,7 +114,12 @@ public class OrderService {
 
         LocalTime now = LocalTime.now();
         if ((!now.isAfter(store.getOpenedAt()) || !now.isBefore(store.getClosedAt())) && !ignoreClose) {
-            throw new ResponseException(ResponseCode.CLOSED_STORE);
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("영업시간: ");
+            errorMsg.append(store.getOpenedAt());
+            errorMsg.append(" ~ ");
+            errorMsg.append(store.getClosedAt());
+            throw new ResponseException(ResponseCode.CLOSED_STORE, errorMsg.toString());
         }
 
         return store;

@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ResponseException.class)
     public ResponseEntity<ResponseStatusDto> BaseException(ResponseException ex, HttpServletRequest req) {
-        return baseException(req, ex.getResponseCode());
+        return baseException(req, ex);
     }
 
     /**

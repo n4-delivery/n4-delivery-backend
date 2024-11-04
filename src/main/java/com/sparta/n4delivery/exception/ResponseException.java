@@ -16,4 +16,9 @@ public class ResponseException extends RuntimeException {
         super(responseCode.getMessage());
         this.responseCode = responseCode;
     }
+
+    public ResponseException(ResponseCode responseCode, String errorMsg) {
+        super(responseCode.getMessage() + " [" + errorMsg + "]");
+        this.responseCode = responseCode;
+    }
 }
