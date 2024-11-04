@@ -9,6 +9,7 @@ import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +32,7 @@ public class Store {
     @JoinColumn(name = "user_id")
     private User user;
 
+    //가게이름
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -64,4 +66,5 @@ public class Store {
             orphanRemoval = true)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
+
 }
