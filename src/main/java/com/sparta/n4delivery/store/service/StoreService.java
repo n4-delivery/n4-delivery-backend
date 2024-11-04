@@ -12,6 +12,7 @@ import com.sparta.n4delivery.store.repository.StoreRepository;
 import com.sparta.n4delivery.user.entity.User;
 import com.sparta.n4delivery.user.repository.UserRepository;
 import java.time.LocalTime;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,8 @@ public class StoreService {
     }
 
     // 가게 수 제한 확인
-    if (storeRepository.countByOwner(user) >= 3) {
+    List<Store> userStores = storeRepository.findAllByUser(user);
+    if (userStores.size() >= 3) {
       throw new IllegalStateException("사장님은 최대 3개의 가게만 운영할 수 있습니다.");
     }
 
