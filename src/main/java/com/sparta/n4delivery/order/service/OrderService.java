@@ -16,6 +16,7 @@ import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.repository.StoreRepository;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,15 +36,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailsRepository orderDetailsRepository;
 
+    @Transactional
     public ResponseCreateOrderDto createOrder(HttpServletRequest req, Long storeId, RequestCreateOrderDto requestDto) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).build();
         Store store = findStore(storeId);
-        List<Menu> menus = searchOrderMenus(requestDto.getRequestOrderDetails());
+        List<Menu> menus = searchOrderMenus(requestDto.getOrderMenus());
 
-        List<OrderDetail> orderDetails = requestDto.convertEntityToDto(menus);
-        Order order = requestDto.convertDtoToEntity(user, store, orderDetails);
+        Order order = requestDto.convertDtoToEntity(user, store);
         orderRepository.save(order);
+        List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
         orderDetailsRepository.saveAll(orderDetails);
         return ResponseCreateOrderDto.createResponseDto(order.getId(), req.getRequestURI());
     }

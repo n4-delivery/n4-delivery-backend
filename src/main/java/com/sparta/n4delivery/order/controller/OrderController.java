@@ -23,7 +23,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping("/api/stores/{storeId}/orders")
+    @PostMapping("/stores/{storeId}/orders")
     public ResponseEntity<ResponseCreateOrderDto> createOrder(
             HttpServletRequest req,
             @PathVariable Long storeId,
