@@ -75,7 +75,7 @@ public enum ResponseCode {
     // === DH ===
 
     //400
-    LIMIT_STORE(HttpStatus.BAD_REQUEST, "사장님은 최대 3개의 가게만 운영할 수 있습니다.");
+    LIMIT_STORE(HttpStatus.BAD_REQUEST, "사장님은 최대 3개의 가게만 운영할 수 있습니다."),
     // === MG ===
 
     // === HJ ===
