@@ -42,7 +42,7 @@ public class StoreController {
             @RequestBody MenuDeleteRequestDto deleteRequestDto
     ) {
         menuService.deleteMenu(storeId, menuId, deleteRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
