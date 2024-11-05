@@ -2,6 +2,7 @@ package com.sparta.n4delivery.order.controller;
 
 import com.sparta.n4delivery.common.dto.PageResponseDto;
 import com.sparta.n4delivery.order.dto.request.OrderCreateRequestDto;
+import com.sparta.n4delivery.order.dto.request.OrderUpdateRequestDto;
 import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,5 +79,23 @@ public class OrderController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderService.searchOrders(storeId, page - 1, size));
+    }
+
+    /**
+     * 주문 정보 업데이트 API
+     * 주문 정보 상태를 업데이트합니다.
+     *
+     * @param orderId    업데이트할 주문의 ID
+     * @param requestDto 업데이트 요청 정보
+     * @return 업데이트된 주문 정보
+     * @since 2024-11-05
+     */
+    @PutMapping("/order/{orderId}")
+    public ResponseEntity<OrderResponseDto> updateOrder(
+            @PathVariable Long orderId,
+            @RequestBody OrderUpdateRequestDto requestDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderService.updateOrder(orderId, requestDto));
     }
 }

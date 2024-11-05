@@ -1,6 +1,6 @@
 package com.sparta.n4delivery.order.dto.response;
 
-import com.sparta.n4delivery.order.entity.Order;
+import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.order.entity.OrderDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDetailResponseDto {
     private Long id;
-    private Long orderId;
     private Long menuId;
+    private String menuName;
     private Integer count;
     private Integer price;
 
@@ -31,10 +31,23 @@ public class OrderDetailResponseDto {
      * @since 2024-11-05
      */
     public static OrderDetailResponseDto createResponseDto(OrderDetail orderDetail) {
+        Menu menu = orderDetail.getMenu();
+        return createResponseDto(menu, orderDetail);
+    }
+
+    /**
+     * 주문 상세 정보를 담은 응답 DTO 객체 생성
+     *
+     * @param menu        메뉴 정보
+     * @param orderDetail 주문 상세 정보
+     * @return 생성된 주문 상세 응답 DTO 객체
+     * @since 2024-11-05
+     */
+    public static OrderDetailResponseDto createResponseDto(Menu menu, OrderDetail orderDetail) {
         OrderDetailResponseDto orderDetailResponseDto = new OrderDetailResponseDto();
         orderDetailResponseDto.setId(orderDetail.getId());
-        orderDetailResponseDto.setOrderId(orderDetail.getOrder().getId());
-        orderDetailResponseDto.setMenuId(orderDetail.getMenu().getId());
+        orderDetailResponseDto.setMenuId(menu.getId());
+        orderDetailResponseDto.setMenuName(menu.getName());
         orderDetailResponseDto.setCount(orderDetail.getCount());
         orderDetailResponseDto.setPrice(orderDetail.getPrice());
         return orderDetailResponseDto;

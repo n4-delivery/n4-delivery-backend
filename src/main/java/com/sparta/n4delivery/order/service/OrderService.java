@@ -1,6 +1,7 @@
 package com.sparta.n4delivery.order.service;
 
 import com.sparta.n4delivery.common.dto.PageResponseDto;
+import com.sparta.n4delivery.enums.OrderState;
 import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.exception.ResponseException;
@@ -8,6 +9,7 @@ import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.order.dto.request.OrderCreateRequestDto;
 import com.sparta.n4delivery.order.dto.request.OrderDetailCreateRequestDto;
+import com.sparta.n4delivery.order.dto.request.OrderUpdateRequestDto;
 import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.order.entity.OrderDetail;
@@ -17,11 +19,11 @@ import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.repository.StoreRepository;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class OrderService {
         orderRepository.save(order);
         List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
         orderDetailsRepository.saveAll(orderDetails);
-        return OrderResponseDto.createResponseDto(order, orderDetails);
+        return OrderResponseDto.createOrderResponseDto(store, menus, order, orderDetails);
     }
 
     /**
@@ -76,7 +78,7 @@ public class OrderService {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).build();
         Page<Order> orders = orderRepository.findAllByUserOrderByUpdatedAtDesc(user, PageRequest.of(page, size));
-        return createResponseDto(orders);
+        return createPageResponseDto(orders);
     }
 
     /**
@@ -91,7 +93,42 @@ public class OrderService {
     public PageResponseDto<List<OrderResponseDto>> searchOrders(Long storeId, int page, int size) {
         Store store = findStore(storeId, true);
         Page<Order> orders = orderRepository.findAllByStoreOrderByUpdatedAtDesc(store, PageRequest.of(page, size));
-        return createResponseDto(orders);
+        return createPageResponseDto(orders);
+    }
+
+    /**
+     * 주문 상태 업데이트 메서드
+     *
+     * @param orderId    주문 ID
+     * @param requestDto 주문 상태 업데이트 요청 DTO
+     * @return 업데이트된 주문 정보
+     * @throws ResponseException 주문이 존재하지 않거나 이미 처리된 경우 예외 발생
+     * @since 2024-11-05
+     */
+    @Transactional
+    public OrderResponseDto updateOrder(Long orderId, OrderUpdateRequestDto requestDto) {
+        Order order = findOrder(orderId);
+        order.updateState(requestDto.getState());
+        return OrderResponseDto.createOrderResponseDto(order);
+    }
+
+    /**
+     * 주문 정보 조회 메서드
+     *
+     * @param orderId 주문 ID
+     * @return 조회된 주문 정보
+     * @throws ResponseException 주문이 존재하지 않거나 이미 처리된 경우 예외 발생
+     * @since 2024-11-05
+     */
+    public Order findOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new ResponseException(ResponseCode.NOT_FOUND_ORDER)
+        );
+
+        if (order.getState() != OrderState.REQUEST)
+            throw new ResponseException(ResponseCode.ALREADY_ACCEPT_ORDER);
+
+        return order;
     }
 
     /**
@@ -121,7 +158,6 @@ public class OrderService {
             errorMsg.append(store.getClosedAt());
             throw new ResponseException(ResponseCode.CLOSED_STORE, errorMsg.toString());
         }
-
         return store;
     }
 
@@ -146,10 +182,10 @@ public class OrderService {
      * @return 주문 목록 응답 DTO (페이징 정보 포함)
      * @since 2024-11-05
      */
-    private PageResponseDto<List<OrderResponseDto>> createResponseDto(Page<Order> orders) {
+    private PageResponseDto<List<OrderResponseDto>> createPageResponseDto(Page<Order> orders) {
         List<OrderResponseDto> responseOrders = new ArrayList<>();
         for (Order order : orders)
-            responseOrders.add(OrderResponseDto.createResponseDto(order, order.getOrderDetails()));
+            responseOrders.add(OrderResponseDto.createOrderResponseDto(order));
         return PageResponseDto.of(responseOrders, orders.getPageable(), orders.getTotalPages());
     }
 }
