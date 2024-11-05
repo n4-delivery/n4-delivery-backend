@@ -69,12 +69,14 @@ public enum ResponseCode {
     ALREADY_MENU(HttpStatus.CONFLICT, "이미 등록된 메뉴"),
 
     // 500
-    UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류");
+    UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류"),
 
     // === MH ===
 
     // === DH ===
 
+    //400
+    LIMIT_STORE(HttpStatus.BAD_REQUEST, "사장님은 최대 3개의 가게만 운영할 수 있습니다.");
     // === MG ===
 
     // === HJ ===

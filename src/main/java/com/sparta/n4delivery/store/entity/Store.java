@@ -7,6 +7,7 @@ import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -66,5 +67,16 @@ public class Store {
             orphanRemoval = true)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
+
+    // soft delete 지원을 위한 필드
+    private LocalDateTime deletedAt;
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
 
 }
