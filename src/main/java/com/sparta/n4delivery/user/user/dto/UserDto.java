@@ -1,11 +1,9 @@
 package com.sparta.n4delivery.user.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UserDto {
-    private String email;   // 이메일
+    private String username; // 사용자 이름
     private String password; // 비밀번호
 }

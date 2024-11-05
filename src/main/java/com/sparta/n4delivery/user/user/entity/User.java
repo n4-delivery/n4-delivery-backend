@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import java.util.List;
  * @since 2024-10-03
  */
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
