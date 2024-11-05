@@ -70,63 +70,63 @@ public class StoreService {
 //    );
 //  }
 
-  // 다건 조회 메서드
-  public PaginatedStoreResponse getStores(String name, int page, int size) {
-    PageRequest pageRequest = PageRequest.of(page - 1, size);
-    Page<Store> stores = storeRepository.findByNameContaining(name, pageRequest);
-
-    List<StoreSummaryResponse> storeContents = stores.getContent().stream()
-        .map(store -> new StoreSummaryResponse(
-            store.getId(),
-            store.getName(),
-            store.getOpenedAt().toString(),
-            store.getClosedAt().toString(),
-            store.getMinimumAmount(),
-            store.getState().name()
-        )).collect(Collectors.toList());
-
-    return new PaginatedStoreResponse(
-        storeContents,
-        page,
-        size,
-        stores.getTotalPages()
-    );
-  }
-
-  // 단건 조회 메서드
-  public StoreDetailResponse getStoreDetail(Long storeId) {
-    Store store = storeRepository.findById(storeId)
-        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
-
-    return new StoreDetailResponse(
-        store.getId(),
-        store.getName(),
-        store.getOpenedAt().toString(),
-        store.getClosedAt().toString(),
-        store.getMinimumAmount(),
-        store.getState().name(),
-        store.getMenus().stream()
-            .map(menu -> new MenuResponseDto(menu.getId(), menu.getName(), menu.getPrice()))
-            .collect(Collectors.toList())
-    );
-  }
-
-//  @Transactional
-//  public void deleteStore(String token, Long storeId) {
-//    // JWT 토큰에서 사용자 이메일을 추출
-//    String email = jwtUtil.extractUsername(token);
-//    User user = userRepository.findByEmail(email)
-//        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
+//  // 다건 조회 메서드
+//  public PaginatedStoreResponse getStores(String name, int page, int size) {
+//    PageRequest pageRequest = PageRequest.of(page - 1, size);
+//    Page<Store> stores = storeRepository.findByNameContaining(name, pageRequest);
 //
-//    // 가게 조회 및 소유자 확인
+//    List<StoreSummaryResponse> storeContents = stores.getContent().stream()
+//        .map(store -> new StoreSummaryResponse(
+//            store.getId(),
+//            store.getName(),
+//            store.getOpenedAt().toString(),
+//            store.getClosedAt().toString(),
+//            store.getMinimumAmount(),
+//            store.getState().name()
+//        )).collect(Collectors.toList());
+//
+//    return new PaginatedStoreResponse(
+//        storeContents,
+//        page,
+//        size,
+//        stores.getTotalPages()
+//    );
+//  }
+//
+//  // 단건 조회 메서드
+//  public StoreDetailResponse getStoreDetail(Long storeId) {
 //    Store store = storeRepository.findById(storeId)
 //        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
-//    if (!store.getUser().equals(user)) {
-//      throw new ResponseException(ResponseCode.INVALID_PERMISSION);
-//    }
 //
-//    // 가게 soft delete 처리
-//    store.softDelete();
-//    storeRepository.save(store);
+//    return new StoreDetailResponse(
+//        store.getId(),
+//        store.getName(),
+//        store.getOpenedAt().toString(),
+//        store.getClosedAt().toString(),
+//        store.getMinimumAmount(),
+//        store.getState().name(),
+//        store.getMenus().stream()
+//            .map(menu -> new MenuResponseDto(menu.getId(), menu.getName(), menu.getPrice()))
+//            .collect(Collectors.toList())
+//    );
 //  }
+
+  @Transactional
+  public void deleteStore(String token, Long storeId) {
+    // JWT 토큰에서 사용자 이메일을 추출
+    String email = jwtUtil.extractUsername(token);
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
+
+    // 가게 조회 및 소유자 확인
+    Store store = storeRepository.findById(storeId)
+        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
+    if (!store.getUser().equals(user)) {
+      throw new ResponseException(ResponseCode.INVALID_PERMISSION);
+    }
+
+    // 가게 soft delete 처리
+    store.softDelete();
+    storeRepository.save(store);
+  }
 }

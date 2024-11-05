@@ -110,60 +110,33 @@ class StoreServiceTest {
 //    assertEquals("21:00", response.getClosedAt());
 //    assertEquals(2000, response.getMinimumAmount());
 //  }
-
-  @Test
-  void testGetStores_Success() {
-    Pageable pageable = PageRequest.of(0, 10);
-    List<Store> stores = List.of(
-        Store.builder()
-            .id(1L)
-            .name("Test Store")
-            .openedAt(LocalTime.of(9, 0))
-            .closedAt(LocalTime.of(22, 0))
-            .minimumAmount(1000)
-            .state(StoreState.OPEN)
-            .build()
-    );
-    Page<Store> page = new PageImpl<>(stores, pageable, 1);
-
-    given(storeRepository.findByNameContaining(anyString(), any(Pageable.class))).willReturn(page);
-
-    PaginatedStoreResponse response = storeService.getStores("Test", 1, 10);
-
-    assertNotNull(response);
-    assertEquals(1, response.getContents().size());
-    assertEquals("Test Store", response.getContents().get(0).getName());
-  }
-
-  @Test
-  void testGetStoreDetail_Success() {
-    Store store = Store.builder()
-        .id(1L)
-        .name("Test Store")
-        .openedAt(LocalTime.of(9, 0))
-        .closedAt(LocalTime.of(22, 0))
-        .minimumAmount(1000)
-        .state(StoreState.OPEN)
-        .build();
-
-    given(storeRepository.findById(1L)).willReturn(Optional.of(store));
-
-    StoreDetailResponse response = storeService.getStoreDetail(1L);
-
-    assertNotNull(response);
-    assertEquals("Test Store", response.getName());
-    assertEquals("09:00", response.getOpenedAt());
-    assertEquals("22:00", response.getClosedAt());
-    assertEquals(1000, response.getMinimumAmount());
-  }
-
-//  @Test
-//  void testDeleteStore_Success() {
-//    User owner = new User();
-//    owner.setId(1L);
-//    owner.setEmail("owner@example.com");
-//    owner.setType(UserType.OWNER);
 //
+//  @Test
+//  void testGetStores_Success() {
+//    Pageable pageable = PageRequest.of(0, 10);
+//    List<Store> stores = List.of(
+//        Store.builder()
+//            .id(1L)
+//            .name("Test Store")
+//            .openedAt(LocalTime.of(9, 0))
+//            .closedAt(LocalTime.of(22, 0))
+//            .minimumAmount(1000)
+//            .state(StoreState.OPEN)
+//            .build()
+//    );
+//    Page<Store> page = new PageImpl<>(stores, pageable, 1);
+//
+//    given(storeRepository.findByNameContaining(anyString(), any(Pageable.class))).willReturn(page);
+//
+//    PaginatedStoreResponse response = storeService.getStores("Test", 1, 10);
+//
+//    assertNotNull(response);
+//    assertEquals(1, response.getContents().size());
+//    assertEquals("Test Store", response.getContents().get(0).getName());
+//  }
+//
+//  @Test
+//  void testGetStoreDetail_Success() {
 //    Store store = Store.builder()
 //        .id(1L)
 //        .name("Test Store")
@@ -171,16 +144,43 @@ class StoreServiceTest {
 //        .closedAt(LocalTime.of(22, 0))
 //        .minimumAmount(1000)
 //        .state(StoreState.OPEN)
-//        .user(owner)
 //        .build();
 //
-//    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
-//    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
 //    given(storeRepository.findById(1L)).willReturn(Optional.of(store));
 //
-//    storeService.deleteStore("Bearer token", 1L);
+//    StoreDetailResponse response = storeService.getStoreDetail(1L);
 //
-//    verify(storeRepository, times(1)).save(store);
-//    assertTrue(store.isDeleted());
+//    assertNotNull(response);
+//    assertEquals("Test Store", response.getName());
+//    assertEquals("09:00", response.getOpenedAt());
+//    assertEquals("22:00", response.getClosedAt());
+//    assertEquals(1000, response.getMinimumAmount());
 //  }
+
+  @Test
+  void testDeleteStore_Success() {
+    User owner = new User();
+    owner.setId(1L);
+    owner.setEmail("owner@example.com");
+    owner.setType(UserType.OWNER);
+
+    Store store = Store.builder()
+        .id(1L)
+        .name("Test Store")
+        .openedAt(LocalTime.of(9, 0))
+        .closedAt(LocalTime.of(22, 0))
+        .minimumAmount(1000)
+        .state(StoreState.OPEN)
+        .user(owner)
+        .build();
+
+    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
+    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
+    given(storeRepository.findById(1L)).willReturn(Optional.of(store));
+
+    storeService.deleteStore("Bearer token", 1L);
+
+    verify(storeRepository, times(1)).save(store);
+    assertTrue(store.isDeleted());
+  }
 }
