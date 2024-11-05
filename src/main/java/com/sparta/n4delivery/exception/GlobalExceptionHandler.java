@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ResponseException.class)
     public ResponseEntity<ResponseStatusDto> BaseException(ResponseException ex, HttpServletRequest req) {
-        return baseException(req, ex.getResponseCode());
+        return baseException(req, ex);
     }
 
     /**
@@ -52,8 +52,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(UnsupportedEncodingException.class)
     public ResponseEntity<ResponseStatusDto> BaseException(UnsupportedEncodingException ex, HttpServletRequest req) {
-        ex.printStackTrace();
-        log.error(ex.getMessage());
+        printError(ex);
         return baseException(req, ResponseCode.FAILED_ENCODING_TOKEN);
     }
 
@@ -64,24 +63,38 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseStatusDto> BaseException(Exception ex, HttpServletRequest req) {
-        ex.printStackTrace();
-        log.error(ex.getMessage());
+        printError(ex);
         return baseException(req, ResponseCode.UNKNOWN_ERROR);
     }
 
     /**
      * 기본적인 예외 처리를 위한 메서드입니다.
      *
-     * @param req          HTTP 요청 객체
-     * @param responseCode 응답 코드
-     * @return ResponseEntity 객체
+     * @param req HTTP 요청 객체
+     * @param ex  발생한 예외 객체
+     * @return HTTP 응답 객체
      * @since 2024-10-24
      */
-    private ResponseEntity<ResponseStatusDto> baseException(HttpServletRequest req, ResponseCode responseCode) {
+    private ResponseEntity<ResponseStatusDto> baseException(HttpServletRequest req, ResponseException ex) {
         String url = req.getRequestURL().toString();
         return ResponseEntity
-                .status(responseCode.getHttpStatus())
-                .body(new ResponseStatusDto(responseCode, url));
+                .status(ex.getResponseCode().getHttpStatus())
+                .body(new ResponseStatusDto(ex, url));
+    }
+
+    /**
+     * 기본적인 예외 처리를 위한 메서드입니다.
+     *
+     * @param req  HTTP 요청 객체
+     * @param code 응답 코드
+     * @return HTTP 응답 객체
+     * @since 2024-11-05
+     */
+    private ResponseEntity<ResponseStatusDto> baseException(HttpServletRequest req, ResponseCode code) {
+        String url = req.getRequestURL().toString();
+        return ResponseEntity
+                .status(code.getHttpStatus())
+                .body(new ResponseStatusDto(code, url));
     }
 
     /**
@@ -89,13 +102,24 @@ public class GlobalExceptionHandler {
      *
      * @param req      HTTP 요청 객체
      * @param errorMsg 에러 메시지
-     * @return ResponseEntity 객체
-     * @since 2024-10-24
+     * @return HTTP 응답 객체
+     * @since 2024-11-05
      */
     private ResponseEntity<ResponseStatusDto> validException(HttpServletRequest req, String errorMsg) {
         String url = req.getRequestURL().toString();
         return ResponseEntity
                 .status(ResponseCode.BAD_INPUT.getHttpStatus())
                 .body(new ResponseStatusDto(ResponseCode.BAD_INPUT, url, errorMsg));
+    }
+
+    /**
+     * 예외 객체의 스택 트레이스를 배열로 가져옵니다.
+     *
+     * @param ex  발생한 예외 객체
+     * @since 2024-11-05
+     */
+    public void printError(Exception ex) {
+        StackTraceElement[] stackTraceElements = ex.getStackTrace();
+        log.error(ex.getMessage(), stackTraceElements[0].toString());
     }
 }

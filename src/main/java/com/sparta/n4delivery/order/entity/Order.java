@@ -10,6 +10,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 주문에 대한 엔티티 클래스
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @Builder
 @NoArgsConstructor
@@ -41,5 +46,5 @@ public class Order extends Timestamped {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     @Builder.Default
-    private List<OrderDetails> orderDetails = new ArrayList<>();
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }
