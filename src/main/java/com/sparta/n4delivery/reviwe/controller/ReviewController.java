@@ -117,4 +117,20 @@ public class ReviewController {
                 .status(HttpStatus.OK)
                 .body(reviewService.updateReview(reviewId, requestDto));
     }
+
+    /**
+     * 리뷰 삭제 API
+     *
+     * 지정된 ID의 리뷰를 삭제합니다.
+     *
+     * @param reviewId 삭제할 리뷰의 ID
+     * @return 삭제된 리뷰 정보
+     */
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> deleteReview(
+            @PathVariable Long reviewId) {
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(reviewService.deleteReview(reviewId));
+    }
 }

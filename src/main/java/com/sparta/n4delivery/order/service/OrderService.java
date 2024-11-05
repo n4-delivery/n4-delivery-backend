@@ -1,7 +1,6 @@
 package com.sparta.n4delivery.order.service;
 
 import com.sparta.n4delivery.common.dto.PageResponseDto;
-import com.sparta.n4delivery.enums.OrderState;
 import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.exception.ResponseException;
@@ -55,7 +54,8 @@ public class OrderService {
     public OrderResponseDto createOrder(HttpServletRequest req, Long storeId, OrderCreateRequestDto requestDto) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).build();
-        Store store = findStore(storeId, false);
+        Store store = findStore(storeId);
+        validateOrderForCreate(store);
         List<Menu> menus = searchOrderMenus(requestDto.getOrderDetails());
         Order order = requestDto.convertDtoToEntity(user, store);
         orderRepository.save(order);
@@ -76,7 +76,7 @@ public class OrderService {
     public PageResponseDto<List<OrderResponseDto>> searchOrders(HttpServletRequest req, int page, int size) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).build();
-        Page<Order> orders = orderRepository.findAllByUserOrderByUpdatedAtDesc(user, PageRequest.of(page, size));
+        Page<Order> orders = orderRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId(), PageRequest.of(page, size));
         return createPageResponseDto(orders);
     }
 
@@ -90,8 +90,8 @@ public class OrderService {
      * @since 2024-11-05
      */
     public PageResponseDto<List<OrderResponseDto>> searchOrders(Long storeId, int page, int size) {
-        Store store = findStore(storeId, true);
-        Page<Order> orders = orderRepository.findAllByStoreOrderByUpdatedAtDesc(store, PageRequest.of(page, size));
+        Store store = findStore(storeId);
+        Page<Order> orders = orderRepository.findAllByStoreIdOrderByUpdatedAtDesc(store.getId(), PageRequest.of(page, size));
         return createPageResponseDto(orders);
     }
 
@@ -128,31 +128,15 @@ public class OrderService {
     /**
      * 가게 정보 조회 메서드
      *
-     * @param storeId     조회할 가게 ID
-     * @param ignoreClose 영업 상태 확인 여부 (true: 무시, false: 확인)
+     * @param storeId 조회할 가게 ID
      * @return 조회된 가게 정보 (Store 엔티티)
      * @throws ResponseException 가게 존재하지 않거나 영업 시간 외일 경우 예외 발생
      * @since 2024-11-05
      */
-    public Store findStore(Long storeId, boolean ignoreClose) {
-        Store store = storeRepository.findById(storeId).orElseThrow(
+    public Store findStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(
                 () -> new ResponseException(ResponseCode.NOT_FOUND_STORE)
         );
-
-        if (store.getState() == StoreState.CLOSE && !ignoreClose) {
-            throw new ResponseException(ResponseCode.CLOSED_STORE);
-        }
-
-        LocalTime now = LocalTime.now();
-        if ((!now.isAfter(store.getOpenedAt()) || !now.isBefore(store.getClosedAt())) && !ignoreClose) {
-            StringBuilder errorMsg = new StringBuilder();
-            errorMsg.append("영업시간: ");
-            errorMsg.append(store.getOpenedAt());
-            errorMsg.append(" ~ ");
-            errorMsg.append(store.getClosedAt());
-            throw new ResponseException(ResponseCode.CLOSED_STORE, errorMsg.toString());
-        }
-        return store;
     }
 
     /**
@@ -167,6 +151,28 @@ public class OrderService {
                 requestMenus.stream()
                         .map(OrderDetailCreateRequestDto::getMenuId)
                         .toList());
+    }
+
+    /**
+     * 가게 생성 가능 여부 검증 메서드
+     *
+     * @param store 검증할 가게 정보
+     * @throws ResponseException 주문 생성 불가능한 경우 예외를 던집니다.
+     */
+    private void validateOrderForCreate(Store store) {
+        if (store.getState() == StoreState.CLOSE) {
+            throw new ResponseException(ResponseCode.CLOSED_STORE);
+        }
+
+        LocalTime now = LocalTime.now();
+        if ((!now.isAfter(store.getOpenedAt()) || !now.isBefore(store.getClosedAt()))) {
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("영업시간: ");
+            errorMsg.append(store.getOpenedAt());
+            errorMsg.append(" ~ ");
+            errorMsg.append(store.getClosedAt());
+            throw new ResponseException(ResponseCode.CLOSED_STORE, errorMsg.toString());
+        }
     }
 
     /**
