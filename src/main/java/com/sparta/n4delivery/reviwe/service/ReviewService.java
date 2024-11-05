@@ -10,13 +10,13 @@ import com.sparta.n4delivery.reviwe.dto.request.ReviewRequestDto;
 import com.sparta.n4delivery.reviwe.dto.response.ReviewResponseDto;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.reviwe.repository.ReviewRepository;
-import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class ReviewService {
     public PageResponseDto<List<ReviewResponseDto>> searchReviews(HttpServletRequest req, int page, int size) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).nickname("홍길동").build();
-        Page<Review> reviews = reviewRepository.findAllByUserOrderByUpdatedAtDesc(user, PageRequest.of(page, size));
+        Page<Review> reviews = reviewRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId(), PageRequest.of(page, size));
         return createPageResponseDto(user, reviews);
     }
 
@@ -82,8 +82,7 @@ public class ReviewService {
     public PageResponseDto<List<ReviewResponseDto>> searchReviews(HttpServletRequest req, Long storeId, int page, int size) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).nickname("홍길동").build();
-        Store store = Store.builder().id(storeId).build();
-        Page<Review> reviews = reviewRepository.findAllByStoreOrderByUpdatedAtDesc(store, PageRequest.of(page, size));
+        Page<Review> reviews = reviewRepository.findAllByStoreIdOrderByUpdatedAtDesc(storeId, PageRequest.of(page, size));
         return createPageResponseDto(user, reviews);
     }
 
@@ -93,21 +92,46 @@ public class ReviewService {
      * @param req     HttpServletRequest 객체 (현재는 사용되지 않음)
      * @param orderId 조회할 리뷰가 속한 주문의 ID
      * @return 조회된 리뷰 정보를 담은 ReviewResponseDto 객체
+     * @since 2024-11-05
      */
     public ReviewResponseDto findReview(HttpServletRequest req, Long orderId) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).nickname("홍길동").build();
-        Order order = Order.builder().id(orderId).build();
-        Review review = reviewRepository.findByOrderOrderByUpdatedAtDesc(order);
+        Review review = reviewRepository.findByOrderIdOrderByUpdatedAtDesc(orderId);
         return ReviewResponseDto.createResponseDto(user, review);
     }
 
+    /**
+     * 리뷰를 수정합니다.
+     *
+     * @param reviewId   수정할 리뷰의 ID
+     * @param requestDto 수정할 리뷰 정보
+     * @return 수정된 리뷰 정보를 담은 ReviewResponseDto 객체
+     * @since 2024-11-05
+     */
+    @Transactional
     public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).nickname("홍길동").build();
         Review review = findReview(reviewId);
         isMyReview(user.getId(), review.getId());
         review.update(requestDto);
+        return ReviewResponseDto.createResponseDto(user, review);
+    }
+
+    /**
+     * 특정 리뷰를 삭제합니다.
+     *
+     * @param reviewId 삭제할 리뷰의 ID
+     * @return 삭제된 리뷰 정보를 담은 ReviewResponseDto 객체
+     * @since 2024-11-05
+     */
+    public ReviewResponseDto deleteReview(Long reviewId) {
+        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
+        User user = User.builder().id(1L).nickname("홍길동").build();
+        Review review = findReview(reviewId);
+        isMyReview(user.getId(), review.getId());
+        reviewRepository.delete(review);
         return ReviewResponseDto.createResponseDto(user, review);
     }
 
@@ -130,19 +154,42 @@ public class ReviewService {
         return order;
     }
 
+    /**
+     * 주어진 리뷰 ID로 리뷰를 조회합니다.
+     *
+     * @param reviewId 조회할 리뷰의 ID
+     * @return 조회된 리뷰 객체
+     * @throws ResponseException 리뷰가 존재하지 않을 경우 발생
+     * @since 2024-11-05
+     */
     private Review findReview(Long reviewId) {
         return reviewRepository.findById(reviewId).orElseThrow(
                 () -> new ResponseException(ResponseCode.NOT_FOUND_REVIEW)
         );
     }
 
+    /**
+     * 주문에 대한 리뷰 존재 여부를 검사합니다.
+     *
+     * @param orderId 검사할 주문의 ID
+     * @throws ResponseException 이미 리뷰가 존재하는 경우 발생
+     * @since 2024-11-05
+     */
     private void validateReviewForCreate(Long orderId) {
         if (reviewRepository.existsByOrderId(orderId))
             throw new ResponseException(ResponseCode.ALREADY_REVIEW);
     }
 
+    /**
+     * 현재 사용자가 리뷰의 작성자인지 검사합니다.
+     *
+     * @param userId  현재 사용자의 ID
+     * @param orderId 리뷰가 속한 주문의 ID
+     * @throws ResponseException 사용자 권한이 없을 경우 발생
+     * @since 2024-11-05
+     */
     private void isMyReview(Long userId, Long orderId) {
-        if(!Objects.equals(userId, orderId))
+        if (!Objects.equals(userId, orderId))
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);
     }
 
