@@ -32,14 +32,6 @@ public class StoreController {
   private final StoreService storeService;
   private final MenuService menuService;
 
-  @PostMapping
-  public ResponseEntity<ResponseStoreDto> createStore(
-      @RequestHeader("Authorization") String authorizationHeader,
-      @RequestBody StoreDto storeDto) {
-    String token = authorizationHeader.replace("Bearer ", "");
-    ResponseStoreDto response = storeService.createStore(token, storeDto);
-    return ResponseEntity.ok(response);
-  }
 
     @PostMapping("/{storeId}/menu")
     public ResponseEntity<MenuResponseDto> createMenu(
@@ -70,17 +62,17 @@ public class StoreController {
         menuService.deleteMenu(storeId, menuId, deleteRequestDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-  
-//  @PutMapping("/{storeId}")
-//  public ResponseEntity<?> updateStore(
-//      @RequestHeader("Authorization") String authorizationHeader,
-//      @PathVariable Long storeId,
-//      @RequestBody StoreDto storeDto) {
-//    String token = authorizationHeader.replace("Bearer ", "");
-//    ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
-//    return ResponseEntity.ok(response);
-//  }
-//
+
+  @PutMapping("/{storeId}")
+  public ResponseEntity<?> updateStore(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @PathVariable Long storeId,
+      @RequestBody StoreDto storeDto) {
+    String token = authorizationHeader.replace("Bearer ", "");
+    ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
+    return ResponseEntity.ok(response);
+  }
+
 //  // 가게 다건 조회
 //  @GetMapping
 //  public ResponseEntity<PaginatedStoreResponse> getStores(

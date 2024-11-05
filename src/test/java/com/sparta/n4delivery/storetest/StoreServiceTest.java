@@ -48,45 +48,19 @@ class StoreServiceTest {
   @InjectMocks
   private StoreService storeService;
 
-  @Test
-  void testCreateStore_Success() {
-    User owner = new User();
-    owner.setId(1L);
-    owner.setEmail("owner@example.com");
-    owner.setType(UserType.OWNER);
-
-    StoreDto storeDto = new StoreDto("Test Store", "09:00", "22:00", 1000);
-
-    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
-    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
-    given(storeRepository.findAllByUser(owner)).willReturn(List.of());
-    given(storeRepository.save(any(Store.class))).willReturn(Store.builder()
-        .id(1L)
-        .name("Test Store")
-        .openedAt(LocalTime.of(9, 0))
-        .closedAt(LocalTime.of(22, 0))
-        .minimumAmount(1000)
-        .state(StoreState.OPEN)
-        .user(owner)
-        .build());
-
-    ResponseStoreDto response = storeService.createStore("Bearer token", storeDto);
-
-    assertNotNull(response);
-    assertEquals("Test Store", response.getName());
-    assertEquals("09:00", response.getOpenedAt());
-    assertEquals("22:00", response.getClosedAt());
-    assertEquals(1000, response.getMinimumAmount());
-  }
-
 //  @Test
-//  void testUpdateStore_Success() {
+//  void testCreateStore_Success() {
 //    User owner = new User();
 //    owner.setId(1L);
 //    owner.setEmail("owner@example.com");
 //    owner.setType(UserType.OWNER);
 //
-//    Store store = Store.builder()
+//    StoreDto storeDto = new StoreDto("Test Store", "09:00", "22:00", 1000);
+//
+//    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
+//    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
+//    given(storeRepository.findAllByUser(owner)).willReturn(List.of());
+//    given(storeRepository.save(any(Store.class))).willReturn(Store.builder()
 //        .id(1L)
 //        .name("Test Store")
 //        .openedAt(LocalTime.of(9, 0))
@@ -94,23 +68,49 @@ class StoreServiceTest {
 //        .minimumAmount(1000)
 //        .state(StoreState.OPEN)
 //        .user(owner)
-//        .build();
+//        .build());
 //
-//    StoreDto storeDto = new StoreDto("Updated Store", "08:00", "21:00", 2000);
-//
-//    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
-//    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
-//    given(storeRepository.findById(1L)).willReturn(Optional.of(store));
-//
-//    ResponseStoreDto response = storeService.updateStore("Bearer token", 1L, storeDto);
+//    ResponseStoreDto response = storeService.createStore("Bearer token", storeDto);
 //
 //    assertNotNull(response);
-//    assertEquals("Updated Store", response.getName());
-//    assertEquals("08:00", response.getOpenedAt());
-//    assertEquals("21:00", response.getClosedAt());
-//    assertEquals(2000, response.getMinimumAmount());
+//    assertEquals("Test Store", response.getName());
+//    assertEquals("09:00", response.getOpenedAt());
+//    assertEquals("22:00", response.getClosedAt());
+//    assertEquals(1000, response.getMinimumAmount());
 //  }
-//
+
+  @Test
+  void testUpdateStore_Success() {
+    User owner = new User();
+    owner.setId(1L);
+    owner.setEmail("owner@example.com");
+    owner.setType(UserType.OWNER);
+
+    Store store = Store.builder()
+        .id(1L)
+        .name("Test Store")
+        .openedAt(LocalTime.of(9, 0))
+        .closedAt(LocalTime.of(22, 0))
+        .minimumAmount(1000)
+        .state(StoreState.OPEN)
+        .user(owner)
+        .build();
+
+    StoreDto storeDto = new StoreDto("Updated Store", "08:00", "21:00", 2000);
+
+    given(jwtUtil.extractUsername(anyString())).willReturn(owner.getEmail());
+    given(userRepository.findByEmail(owner.getEmail())).willReturn(Optional.of(owner));
+    given(storeRepository.findById(1L)).willReturn(Optional.of(store));
+
+    ResponseStoreDto response = storeService.updateStore("Bearer token", 1L, storeDto);
+
+    assertNotNull(response);
+    assertEquals("Updated Store", response.getName());
+    assertEquals("08:00", response.getOpenedAt());
+    assertEquals("21:00", response.getClosedAt());
+    assertEquals(2000, response.getMinimumAmount());
+  }
+
 //  @Test
 //  void testGetStores_Success() {
 //    Pageable pageable = PageRequest.of(0, 10);

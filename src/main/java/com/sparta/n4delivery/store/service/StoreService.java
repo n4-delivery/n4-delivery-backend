@@ -38,37 +38,28 @@ public class StoreService {
     this.jwtUtil = jwtUtil;
   }
 
+  //가게 수정 메서드
   @Transactional
-  public ResponseStoreDto createStore(String token, StoreDto storeDto) {
+  public ResponseStoreDto updateStore(String token, Long storeId, StoreDto storeDto) {
     // JWT 토큰에서 사용자 이메일을 추출
-    String email = jwtUtil.extractUsername(token); // 사용자 이메일로 수정
+    String email = jwtUtil.extractUsername(token);
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
 
-    // 사장님 권한 확인
-    if (!user.getType().equals(UserType.OWNER)) {
+    // 가게 조회 및 사용자 소유 확인
+    Store store = storeRepository.findById(storeId)
+        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
+    if (!store.getUser().equals(user)) {
       throw new ResponseException(ResponseCode.INVALID_PERMISSION);
     }
 
-    // 가게 수 제한 확인
-    List<Store> userStores = storeRepository.findAllByUser(user);
-    if (userStores.size() >= 3) {
-      throw new ResponseException(ResponseCode.LIMIT_STORE);
-    }
+    // 가게 정보 업데이트
+    store.setName(storeDto.getName());
+    store.setOpenedAt(LocalTime.parse(storeDto.getOpenedAt()));
+    store.setClosedAt(LocalTime.parse(storeDto.getClosedAt()));
+    store.setMinimumAmount(storeDto.getMinimumAmount());
 
-    // 가게 생성 및 저장
-    Store store = Store.builder()
-        .name(storeDto.getName())
-        .openedAt(LocalTime.parse(storeDto.getOpenedAt()))
-        .closedAt(LocalTime.parse(storeDto.getClosedAt()))
-        .minimumAmount(storeDto.getMinimumAmount())
-        .state(StoreState.OPEN)
-        .user(user)
-        .build();
-
-    storeRepository.save(store);
-
-    // 생성된 Store 엔티티를 ResponseStoreDto로 변환하여 반환
+    // 업데이트된 Store 엔티티를 ResponseStoreDto로 변환하여 반환
     return new ResponseStoreDto(
         store.getId(),
         store.getName(),
@@ -79,38 +70,6 @@ public class StoreService {
     );
   }
 
-//  // 가게 수정 메서드
-//  @Transactional
-//  public ResponseStoreDto updateStore(String token, Long storeId, StoreDto storeDto) {
-//    // JWT 토큰에서 사용자 이메일을 추출
-//    String email = jwtUtil.extractUsername(token);
-//    User user = userRepository.findByEmail(email)
-//        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
-//
-//    // 가게 조회 및 사용자 소유 확인
-//    Store store = storeRepository.findById(storeId)
-//        .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
-//    if (!store.getUser().equals(user)) {
-//      throw new ResponseException(ResponseCode.INVALID_PERMISSION);
-//    }
-//
-//    // 가게 정보 업데이트
-//    store.setName(storeDto.getName());
-//    store.setOpenedAt(LocalTime.parse(storeDto.getOpenedAt()));
-//    store.setClosedAt(LocalTime.parse(storeDto.getClosedAt()));
-//    store.setMinimumAmount(storeDto.getMinimumAmount());
-//
-//    // 업데이트된 Store 엔티티를 ResponseStoreDto로 변환하여 반환
-//    return new ResponseStoreDto(
-//        store.getId(),
-//        store.getName(),
-//        store.getOpenedAt().toString(),
-//        store.getClosedAt().toString(),
-//        store.getMinimumAmount(),
-//        store.getState().name()
-//    );
-//  }
-//
 //  // 다건 조회 메서드
 //  public PaginatedStoreResponse getStores(String name, int page, int size) {
 //    PageRequest pageRequest = PageRequest.of(page - 1, size);
