@@ -51,10 +51,10 @@ public class Order extends Timestamped {
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public void updateState(OrderState state) {
-        if (state == OrderState.CANCEL && this.state != OrderState.REQUEST)
+        if (this.state != OrderState.REQUEST && state == OrderState.CANCEL)
             throw new ResponseException(ResponseCode.ALREADY_ACCEPT_ORDER);
 
-        if(state == OrderState.COMPLETE)
+        if(this.state == OrderState.COMPLETE)
             throw new ResponseException(ResponseCode.ALREADY_COMPLETE_ORDER);
 
         this.state = state;

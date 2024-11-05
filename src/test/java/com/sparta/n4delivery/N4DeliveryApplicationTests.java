@@ -200,7 +200,8 @@ class N4DeliveryApplicationTests {
             for (int idx = 0; idx < 10; idx++) {
                 String randomName = RandomStringUtils.randomAlphanumeric(10);
                 Random random = new Random();
-                int randomInt = random.nextInt(490000) + 1000; // 1000 ~ 500000
+//                int randomInt = random.nextInt(490000) + 1000; // 1000 ~ 500000
+                int randomInt = random.nextInt(50000) + 1000; // 1000 ~ 500000
                 menus.add(Menu.builder()
                         .store(store)
                         .name(randomName)
