@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Setter;
 
 /**
  * 회원 정보를 담는 Entity 클래스
@@ -21,6 +22,7 @@ import java.util.List;
  * @since 2024-10-03
  */
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

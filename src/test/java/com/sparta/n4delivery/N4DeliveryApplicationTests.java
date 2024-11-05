@@ -152,10 +152,10 @@ class N4DeliveryApplicationTests {
         }
         reviewRepository.saveAll(reviews);
     }
-
-    @Test
-    @Rollback(false)
-    void sampleOrderData() {
+  
+  @Test
+  @Rollback(false)
+  void sampleOrderData() {
         List<User> users = new ArrayList<>();
         for (int idx = 0; idx < 10; idx++) {
             String randomName = RandomStringUtils.randomAlphanumeric(10);
