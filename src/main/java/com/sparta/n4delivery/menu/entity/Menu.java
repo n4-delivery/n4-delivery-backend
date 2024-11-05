@@ -41,4 +41,11 @@ public class Menu {
     @NotNull(message = "메뉴 상태는 필수 입력 값입니다.")
     @Builder.Default
     private MenuState state = MenuState.SALE;
+
+    public void update(String name, Integer price, MenuState state) {
+        this.name = name;
+        this.price = price;
+        this.state = state;
+
+    }
 }

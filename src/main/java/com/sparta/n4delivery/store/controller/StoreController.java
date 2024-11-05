@@ -1,6 +1,7 @@
 package com.sparta.n4delivery.store.controller;
 
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
+import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,24 @@ public class StoreController {
     private final MenuService menuService;
 
     @PostMapping("/{storeId}/menu")
-    public ResponseEntity<String> createMenu(
+    public ResponseEntity<MenuResponseDto> createMenu(
             @PathVariable Long storeId,
             @RequestBody MenuRequestDto menuRequestDto
-            ) {
-
+    ) {
         menuService.createMenu(storeId, menuRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("메뉴가 생성되었습니다.");
+        MenuResponseDto response = new MenuResponseDto();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PutMapping("/{storeId}/menu/{menuId}")
+    public ResponseEntity<MenuResponseDto> updateMenu(
+            @PathVariable Long storeId,
+            @PathVariable Long menuId,
+            @RequestBody MenuRequestDto menuRequestDto
+    ) {
+        MenuResponseDto response = menuService.updateMenu(storeId, menuId, menuRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
 }

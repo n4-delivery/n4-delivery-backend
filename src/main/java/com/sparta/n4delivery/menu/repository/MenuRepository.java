@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     boolean existsByStoreAndName(Store store, String name);
+
+    boolean existsByStoreAndNameAndIdNot(Store store, String name, Long menuId);
 }
