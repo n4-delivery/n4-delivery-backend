@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Review findByOrder(Order order);
+    Review findByOrderId(Long orderId);
 
-    boolean existsByOrder(Order order);
+    boolean existsByOrderId(Long orderId);
 
     Page<Review> findAllByUserOrderByUpdatedAtDesc(User user, Pageable pageable);
 
