@@ -10,6 +10,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 주문에 대한 엔티티 클래스
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @Builder
 @NoArgsConstructor

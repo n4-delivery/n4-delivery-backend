@@ -6,9 +6,14 @@ import com.sparta.n4delivery.order.entity.OrderDetail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 주문 상세 정보 생성 요청 DTO
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @NoArgsConstructor
-public class RequestCreateOrderDetailDto {
+public class OrderDetailCreateRequestDto {
     private Long menuId;
     private Integer count;
 

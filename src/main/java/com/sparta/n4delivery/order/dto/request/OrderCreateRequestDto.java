@@ -11,13 +11,19 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 주문 생성 요청 DTO 클래스입니다.
+ * 주문 상세 정보를 담고 있으며, 주문 생성 시 사용됩니다.
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @NoArgsConstructor
-public class RequestCreateOrderDto {
-    List<RequestCreateOrderDetailDto> orderDetails;
+public class OrderCreateRequestDto {
+    List<OrderDetailCreateRequestDto> orderDetails;
 
     /**
-     * DTO 객체를 엔티티 객체로 변환
+     * 현재 DTO 객체를 Order 엔티티 객체로 변환합니다.
      *
      * @param user  주문자
      * @param store 주문 가게
@@ -31,10 +37,18 @@ public class RequestCreateOrderDto {
                 .build();
     }
 
+    /**
+     * 현재 DTO 객체의 주문 상세 정보를 기반으로 OrderDetail 엔티티 객체 목록을 생성합니다.
+     *
+     * @param order 주문 정보
+     * @param menus 메뉴 목록
+     * @return 생성된 OrderDetail 엔티티 객체 목록
+     * @since 2024-11-05
+     */
     public List<OrderDetail> convertEntityToDto(Order order, List<Menu> menus) {
         int totalPrice = 0;
         List<OrderDetail> orderDetails = new ArrayList<>();
-        for (RequestCreateOrderDetailDto orderMenu : this.orderDetails) {
+        for (OrderDetailCreateRequestDto orderMenu : this.orderDetails) {
             for (Menu menu : menus) {
                 if (menu.getId().equals(orderMenu.getMenuId())) {
                     totalPrice += menu.getPrice() * orderMenu.getCount();
