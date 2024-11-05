@@ -33,63 +33,63 @@ public class StoreController {
   private final MenuService menuService;
 
 
-    @PostMapping("/{storeId}/menu")
-    public ResponseEntity<MenuResponseDto> createMenu(
-            @PathVariable Long storeId,
-            @RequestBody MenuRequestDto menuRequestDto
-    ) {
-        menuService.createMenu(storeId, menuRequestDto);
-        MenuResponseDto response = new MenuResponseDto();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @PostMapping("/{storeId}/menu")
+//    public ResponseEntity<MenuResponseDto> createMenu(
+//            @PathVariable Long storeId,
+//            @RequestBody MenuRequestDto menuRequestDto
+//    ) {
+//        menuService.createMenu(storeId, menuRequestDto);
+//        MenuResponseDto response = new MenuResponseDto();
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
+//
+//    @PutMapping("/{storeId}/menu/{menuId}")
+//    public ResponseEntity<MenuResponseDto> updateMenu(
+//            @PathVariable Long storeId,
+//            @PathVariable Long menuId,
+//            @RequestBody MenuRequestDto menuRequestDto
+//    ) {
+//        MenuResponseDto response = menuService.updateMenu(storeId, menuId, menuRequestDto);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
+//
+//    @DeleteMapping("/{storeId}/menu/{menuId}")
+//    public ResponseEntity<Void> deleteMenu(
+//            @PathVariable Long storeId,
+//            @PathVariable Long menuId,
+//            @RequestBody MenuDeleteRequestDto deleteRequestDto
+//    ) {
+//        menuService.deleteMenu(storeId, menuId, deleteRequestDto);
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//    }
+//
+//  @PutMapping("/{storeId}")
+//  public ResponseEntity<?> updateStore(
+//      @RequestHeader("Authorization") String authorizationHeader,
+//      @PathVariable Long storeId,
+//      @RequestBody StoreDto storeDto) {
+//    String token = authorizationHeader.replace("Bearer ", "");
+//    ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
+//    return ResponseEntity.ok(response);
+//  }
 
-    @PutMapping("/{storeId}/menu/{menuId}")
-    public ResponseEntity<MenuResponseDto> updateMenu(
-            @PathVariable Long storeId,
-            @PathVariable Long menuId,
-            @RequestBody MenuRequestDto menuRequestDto
-    ) {
-        MenuResponseDto response = menuService.updateMenu(storeId, menuId, menuRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping("/{storeId}/menu/{menuId}")
-    public ResponseEntity<Void> deleteMenu(
-            @PathVariable Long storeId,
-            @PathVariable Long menuId,
-            @RequestBody MenuDeleteRequestDto deleteRequestDto
-    ) {
-        menuService.deleteMenu(storeId, menuId, deleteRequestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-  @PutMapping("/{storeId}")
-  public ResponseEntity<?> updateStore(
-      @RequestHeader("Authorization") String authorizationHeader,
-      @PathVariable Long storeId,
-      @RequestBody StoreDto storeDto) {
-    String token = authorizationHeader.replace("Bearer ", "");
-    ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
+  // 가게 다건 조회
+  @GetMapping
+  public ResponseEntity<PaginatedStoreResponse> getStores(
+      @RequestParam String name,
+      @RequestParam int page,
+      @RequestParam int size) {
+    PaginatedStoreResponse response = storeService.getStores(name, page, size);
     return ResponseEntity.ok(response);
   }
 
-//  // 가게 다건 조회
-//  @GetMapping
-//  public ResponseEntity<PaginatedStoreResponse> getStores(
-//      @RequestParam String name,
-//      @RequestParam int page,
-//      @RequestParam int size) {
-//    PaginatedStoreResponse response = storeService.getStores(name, page, size);
-//    return ResponseEntity.ok(response);
-//  }
-//
-//  // 가게 단건 조회
-//  @GetMapping("/{storeId}")
-//  public ResponseEntity<StoreDetailResponse> getStoreDetail(@PathVariable Long storeId) {
-//    StoreDetailResponse response = storeService.getStoreDetail(storeId);
-//    return ResponseEntity.ok(response);
-//  }
-//
+  // 가게 단건 조회
+  @GetMapping("/{storeId}")
+  public ResponseEntity<StoreDetailResponse> getStoreDetail(@PathVariable Long storeId) {
+    StoreDetailResponse response = storeService.getStoreDetail(storeId);
+    return ResponseEntity.ok(response);
+  }
+
 //  // 가게 삭제
 //  @DeleteMapping("/{storeId}")
 //  public ResponseEntity<?> deleteStore(
