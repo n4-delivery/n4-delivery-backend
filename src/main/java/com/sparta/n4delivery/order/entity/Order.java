@@ -2,6 +2,8 @@ package com.sparta.n4delivery.order.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.enums.OrderState;
+import com.sparta.n4delivery.enums.ResponseCode;
+import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
@@ -49,6 +51,12 @@ public class Order extends Timestamped {
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public void updateState(OrderState state) {
+        if (state == OrderState.CANCEL && this.state != OrderState.REQUEST)
+            throw new ResponseException(ResponseCode.ALREADY_ACCEPT_ORDER);
+
+        if(state == OrderState.COMPLETE)
+            throw new ResponseException(ResponseCode.ALREADY_COMPLETE_ORDER);
+
         this.state = state;
     }
 }

@@ -57,7 +57,6 @@ public class OrderService {
         User user = User.builder().id(1L).build();
         Store store = findStore(storeId, false);
         List<Menu> menus = searchOrderMenus(requestDto.getOrderDetails());
-
         Order order = requestDto.convertDtoToEntity(user, store);
         orderRepository.save(order);
         List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
@@ -121,14 +120,9 @@ public class OrderService {
      * @since 2024-11-05
      */
     public Order findOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
+        return orderRepository.findById(orderId).orElseThrow(
                 () -> new ResponseException(ResponseCode.NOT_FOUND_ORDER)
         );
-
-        if (order.getState() != OrderState.REQUEST)
-            throw new ResponseException(ResponseCode.ALREADY_ACCEPT_ORDER);
-
-        return order;
     }
 
     /**
