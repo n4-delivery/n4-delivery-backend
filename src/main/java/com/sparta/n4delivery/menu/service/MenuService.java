@@ -42,4 +42,25 @@ public class MenuService {
 
         return MenuResponseDto.from(menu);
     }
+
+    @Transactional
+    public MenuResponseDto updateMenu(Long storeId, Long menuId, MenuRequestDto menuRequestDto) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_MENU));
+
+        if (!store.getUser().getId().equals(menuRequestDto.getUserId())) {
+            throw new ResponseException(ResponseCode.INVALID_PERMISSION);
+        }
+
+        if (menuRepository.existsByStoreAndNameAndIdNot(store, menuRequestDto.getName(), menuId)) {
+            throw new ResponseException(ResponseCode.ALREADY_MENU);
+        }
+
+        menu.update(menuRequestDto.getName(), menuRequestDto.getPrice(), menuRequestDto.getState());
+
+        return MenuResponseDto.from(menu);
+    }
 }
