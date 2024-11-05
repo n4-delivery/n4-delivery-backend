@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
     /**
      * 예외 객체의 스택 트레이스를 배열로 가져옵니다.
      *
-     * @param ex  발생한 예외 객체
+     * @param ex 발생한 예외 객체
      * @since 2024-11-05
      */
     public void printError(Exception ex) {

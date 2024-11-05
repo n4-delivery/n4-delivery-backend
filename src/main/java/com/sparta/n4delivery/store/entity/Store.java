@@ -7,13 +7,12 @@ import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

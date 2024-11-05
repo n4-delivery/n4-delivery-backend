@@ -16,7 +16,7 @@ public class PageResponseDto<T> {
     private int size;
     private int totalPage;
 
-    public static<T> PageResponseDto<T> of(T data, Pageable pageable, int totalPage) {
+    public static <T> PageResponseDto<T> of(T data, Pageable pageable, int totalPage) {
         return new PageResponseDto<>(data, pageable.getPageNumber() + 1, pageable.getPageSize(), totalPage);
     }
 }
