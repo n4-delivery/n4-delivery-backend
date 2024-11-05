@@ -47,4 +47,8 @@ public class Order extends Timestamped {
             orphanRemoval = true)
     @Builder.Default
     private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    public void updateState(OrderState state) {
+        this.state = state;
+    }
 }
