@@ -6,21 +6,12 @@ import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Setter;
 
-/**
- * 회원 정보를 담는 Entity 클래스
- *
- * @since 2024-10-03
- */
 @Getter
 @Setter
 @Builder

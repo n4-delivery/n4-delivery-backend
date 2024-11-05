@@ -24,7 +24,6 @@ public class JwtUtil {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  // Generate a JWT token
   public String generateToken(String username) {
     Map<String, Object> claims = new HashMap<>();
     return createToken(claims, username);
@@ -32,47 +31,41 @@ public class JwtUtil {
 
   private String createToken(Map<String, Object> claims, String subject) {
     return Jwts.builder()
-        .setClaims(claims)
-        .setSubject(subject)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours expiration
-        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-        .compact();
+            .setClaims(claims)
+            .setSubject(subject)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours expiration
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .compact();
   }
 
-  // Validate token
   public boolean validateToken(String token, String username) {
     String extractedUsername = extractUsername(token);
     return (extractedUsername.equals(username) && !isTokenExpired(token));
   }
 
-  // Extract username from token
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
-  // Check if the token has expired
   private boolean isTokenExpired(String token) {
     return extractExpiration(token).before(new Date());
   }
 
-  // Extract expiration date from token
   public Date extractExpiration(String token) {
     return extractClaim(token, Claims::getExpiration);
   }
 
-  // Extract claims
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     final Claims claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
   }
 
-  // Extract all claims from the token
   private Claims extractAllClaims(String token) {
     return Jwts.parserBuilder()
-        .setSigningKey(getSigningKey())
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+            .setSigningKey(getSigningKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
   }
 }
