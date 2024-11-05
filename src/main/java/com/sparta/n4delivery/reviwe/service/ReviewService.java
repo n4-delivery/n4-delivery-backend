@@ -6,7 +6,7 @@ import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.order.repository.OrderRepository;
-import com.sparta.n4delivery.reviwe.dto.request.ReviewCreateRequestDto;
+import com.sparta.n4delivery.reviwe.dto.request.ReviewRequestDto;
 import com.sparta.n4delivery.reviwe.dto.response.ReviewResponseDto;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.reviwe.repository.ReviewRepository;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 리뷰 서비스
@@ -42,45 +43,14 @@ public class ReviewService {
      * @return 생성된 리뷰 정보를 담은 응답 DTO 객체
      * @since 2024-11-05
      */
-    public ReviewResponseDto createReview(HttpServletRequest req, Long storeId, Long orderId, ReviewCreateRequestDto requestDto) {
+    public ReviewResponseDto createReview(HttpServletRequest req, Long storeId, Long orderId, ReviewRequestDto requestDto) {
         // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
         User user = User.builder().id(1L).nickname("홍길동").build();
         Order order = findOrder(orderId);
-        existReview(order);
+        validateReviewForCreate(order.getId());
         Review review = requestDto.convertDtoToEntity(user, order, storeId);
         reviewRepository.save(review);
-        return ReviewResponseDto.createOrderResponseDto(user, review);
-    }
-
-    /**
-     * 주문 정보 조회 메서드
-     *
-     * @param orderId 주문 ID
-     * @return 조회된 주문 정보
-     * @throws ResponseException 주문이 존재하지 않거나 이미 처리된 경우 예외 발생
-     * @since 2024-11-05
-     */
-    public Order findOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new ResponseException(ResponseCode.NOT_FOUND_ORDER)
-        );
-
-        if (order.getState() != OrderState.COMPLETE)
-            throw new ResponseException(ResponseCode.NOT_COMPLETE_ORDER);
-
-        return order;
-    }
-
-    /**
-     * 주문에 대한 리뷰 존재 여부 검사
-     *
-     * @param order 검사할 주문 객체
-     * @throws ResponseException 리뷰가 이미 존재하는 경우 예외를 던집니다.
-     * @since 2024-11-05
-     */
-    public void existReview(Order order) {
-        if (reviewRepository.existsByOrder(order))
-            throw new ResponseException(ResponseCode.ALREADY_REVIEW);
+        return ReviewResponseDto.createResponseDto(user, review);
     }
 
     /**
@@ -129,7 +99,51 @@ public class ReviewService {
         User user = User.builder().id(1L).nickname("홍길동").build();
         Order order = Order.builder().id(orderId).build();
         Review review = reviewRepository.findByOrderOrderByUpdatedAtDesc(order);
-        return ReviewResponseDto.createOrderResponseDto(user, review);
+        return ReviewResponseDto.createResponseDto(user, review);
+    }
+
+    public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto) {
+        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
+        User user = User.builder().id(1L).nickname("홍길동").build();
+        Review review = findReview(reviewId);
+        isMyReview(user.getId(), review.getId());
+        review.update(requestDto);
+        return ReviewResponseDto.createResponseDto(user, review);
+    }
+
+    /**
+     * 주문 정보 조회 메서드
+     *
+     * @param orderId 주문 ID
+     * @return 조회된 주문 정보
+     * @throws ResponseException 주문이 존재하지 않거나 이미 처리된 경우 예외 발생
+     * @since 2024-11-05
+     */
+    private Order findOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new ResponseException(ResponseCode.NOT_FOUND_ORDER)
+        );
+
+        if (order.getState() != OrderState.COMPLETE)
+            throw new ResponseException(ResponseCode.NOT_COMPLETE_ORDER);
+
+        return order;
+    }
+
+    private Review findReview(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(
+                () -> new ResponseException(ResponseCode.NOT_FOUND_REVIEW)
+        );
+    }
+
+    private void validateReviewForCreate(Long orderId) {
+        if (reviewRepository.existsByOrderId(orderId))
+            throw new ResponseException(ResponseCode.ALREADY_REVIEW);
+    }
+
+    private void isMyReview(Long userId, Long orderId) {
+        if(!Objects.equals(userId, orderId))
+            throw new ResponseException(ResponseCode.INVALID_PERMISSION);
     }
 
     /**
@@ -143,7 +157,7 @@ public class ReviewService {
     private PageResponseDto<List<ReviewResponseDto>> createPageResponseDto(User user, Page<Review> reviews) {
         List<ReviewResponseDto> responseReviews = new ArrayList<>();
         for (Review review : reviews)
-            responseReviews.add(ReviewResponseDto.createOrderResponseDto(user, review));
+            responseReviews.add(ReviewResponseDto.createResponseDto(user, review));
         return PageResponseDto.of(responseReviews, reviews.getPageable(), reviews.getTotalPages());
     }
 }

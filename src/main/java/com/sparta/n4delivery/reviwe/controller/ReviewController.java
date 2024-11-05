@@ -1,7 +1,7 @@
 package com.sparta.n4delivery.reviwe.controller;
 
 import com.sparta.n4delivery.common.dto.PageResponseDto;
-import com.sparta.n4delivery.reviwe.dto.request.ReviewCreateRequestDto;
+import com.sparta.n4delivery.reviwe.dto.request.ReviewRequestDto;
 import com.sparta.n4delivery.reviwe.dto.response.ReviewResponseDto;
 import com.sparta.n4delivery.reviwe.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class ReviewController {
             HttpServletRequest req,
             @PathVariable Long storeId,
             @PathVariable Long orderId,
-            @RequestBody ReviewCreateRequestDto requestDto) {
+            @RequestBody ReviewRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(reviewService.createReview(req, storeId, orderId, requestDto));
@@ -99,5 +99,22 @@ public class ReviewController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(reviewService.findReview(req, orderId));
+    }
+
+    /**
+     * 리뷰 수정 API
+     *
+     * @param reviewId   업데이트할 리뷰의 ID
+     * @param requestDto 수정할 정보
+     * @return 업데이트된 리뷰 정보
+     * @since 2024-11-05
+     */
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> updateReview(
+            @PathVariable Long reviewId,
+            @RequestBody ReviewRequestDto requestDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(reviewService.updateReview(reviewId, requestDto));
     }
 }

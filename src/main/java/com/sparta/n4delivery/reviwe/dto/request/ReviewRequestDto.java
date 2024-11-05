@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReviewCreateRequestDto {
+public class ReviewRequestDto {
     @Size(min = 1, max = 5, message = "1~5사이의 별점을 입력해주세요.")
     private double score;
     private String comment;

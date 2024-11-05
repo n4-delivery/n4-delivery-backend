@@ -35,7 +35,7 @@ public class ReviewResponseDto {
      * @return 생성된 리뷰 응답 DTO 객체
      * @since 2024-11-05
      */
-    public static ReviewResponseDto createOrderResponseDto(User user, Review review) {
+    public static ReviewResponseDto createResponseDto(User user, Review review) {
         ReviewResponseDto responseDto = new ReviewResponseDto();
         responseDto.id = review.getId();
         responseDto.userId = user.getId();

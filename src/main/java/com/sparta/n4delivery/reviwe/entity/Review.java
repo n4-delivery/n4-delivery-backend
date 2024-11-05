@@ -2,6 +2,7 @@ package com.sparta.n4delivery.reviwe.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.order.entity.Order;
+import com.sparta.n4delivery.reviwe.dto.request.ReviewRequestDto;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
@@ -40,4 +41,9 @@ public class Review extends Timestamped {
 
     @Column(length = 300)
     private String comment;
+
+    public void update(ReviewRequestDto requestDto) {
+        score = requestDto.getScore();
+        comment = requestDto.getComment();
+    }
 }
