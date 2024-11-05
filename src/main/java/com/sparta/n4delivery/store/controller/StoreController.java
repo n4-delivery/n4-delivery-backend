@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.store.controller;
 
+import com.sparta.n4delivery.login.LoginUser;
 import com.sparta.n4delivery.menu.dto.MenuDeleteRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
@@ -9,6 +10,7 @@ import com.sparta.n4delivery.store.dto.ResponseStoreDto;
 import com.sparta.n4delivery.store.dto.StoreDetailResponse;
 import com.sparta.n4delivery.store.dto.StoreDto;
 import com.sparta.n4delivery.store.service.StoreService;
+import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,11 +55,10 @@ public class StoreController {
 
     @PutMapping("/{storeId}")
     public ResponseEntity<?> updateStore(
-            @RequestHeader("Authorization") String authorizationHeader,
+            @LoginUser User user,
             @PathVariable Long storeId,
             @RequestBody StoreDto storeDto) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
+        ResponseStoreDto response = storeService.updateStore(user, storeId, storeDto);
         return ResponseEntity.ok(response);
     }
 
@@ -81,10 +82,9 @@ public class StoreController {
     // 가게 삭제
     @DeleteMapping("/{storeId}")
     public ResponseEntity<?> deleteStore(
-            @RequestHeader("Authorization") String authorizationHeader,
+            @LoginUser User user,
             @PathVariable Long storeId) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        storeService.deleteStore(token, storeId);
+        storeService.deleteStore(user, storeId);
         return ResponseEntity.noContent().build();
     }
 }

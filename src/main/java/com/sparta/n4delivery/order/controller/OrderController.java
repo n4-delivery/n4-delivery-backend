@@ -1,10 +1,12 @@
 package com.sparta.n4delivery.order.controller;
 
 import com.sparta.n4delivery.common.dto.PageResponseDto;
+import com.sparta.n4delivery.login.LoginUser;
 import com.sparta.n4delivery.order.dto.request.OrderCreateRequestDto;
 import com.sparta.n4delivery.order.dto.request.OrderUpdateRequestDto;
 import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.service.OrderService;
+import com.sparta.n4delivery.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,7 @@ public class OrderController {
     /**
      * 주문 생성 API
      *
-     * @param req        HTTP 요청 객체
+     * @param user       로그인한 유저
      * @param storeId    가게 ID
      * @param requestDto 주문 생성 요청 DTO
      * @return 생성된 주문 정보\
@@ -35,18 +37,18 @@ public class OrderController {
      */
     @PostMapping("/stores/{storeId}/orders")
     public ResponseEntity<OrderResponseDto> createOrder(
-            HttpServletRequest req,
+            @LoginUser User user,
             @PathVariable Long storeId,
             @RequestBody OrderCreateRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orderService.createOrder(req, storeId, requestDto));
+                .body(orderService.createOrder(user, storeId, requestDto));
     }
 
     /**
      * 주문 목록 조회(주문자) API
      *
-     * @param req  HTTP 요청 객체
+     * @param user 로그인 유저
      * @param page 페이지 번호
      * @param size 페이지 크기
      * @return 주문 목록과 페이지 정보
@@ -54,12 +56,12 @@ public class OrderController {
      */
     @GetMapping("/orders")
     public ResponseEntity<PageResponseDto<List<OrderResponseDto>>> searchOrders(
-            HttpServletRequest req,
-            @RequestParam int page,
-            @RequestParam int size) {
+            @LoginUser User user,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orderService.searchOrders(req, page - 1, size));
+                .body(orderService.searchOrders(user, page - 1, size));
     }
 
     /**
@@ -74,8 +76,8 @@ public class OrderController {
     @GetMapping("/stores/{storeId}/orders")
     public ResponseEntity<PageResponseDto<List<OrderResponseDto>>> searchOrders(
             @PathVariable Long storeId,
-            @RequestParam int page,
-            @RequestParam int size) {
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderService.searchOrders(storeId, page - 1, size));
