@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -37,6 +39,9 @@ public class Menu {
     @Column
     private Integer price;
 
+    // 소프트 삭제를 위한 deletedAt 필드 추가
+    private LocalDateTime deletedAt;
+
     @Enumerated(value = EnumType.STRING)
     @NotNull(message = "메뉴 상태는 필수 입력 값입니다.")
     @Builder.Default
@@ -47,5 +52,15 @@ public class Menu {
         this.price = price;
         this.state = state;
 
+    }
+
+    // 삭제 메서드 추가
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    // 소프트 삭제 상태 확인 메서드
+    public boolean isDeleted() {
+        return this.deletedAt != null;
     }
 }

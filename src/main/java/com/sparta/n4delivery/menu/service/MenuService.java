@@ -2,6 +2,7 @@ package com.sparta.n4delivery.menu.service;
 
 import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.exception.ResponseException;
+import com.sparta.n4delivery.menu.dto.MenuDeleteRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.menu.entity.Menu;
@@ -62,5 +63,21 @@ public class MenuService {
         menu.update(menuRequestDto.getName(), menuRequestDto.getPrice(), menuRequestDto.getState());
 
         return MenuResponseDto.from(menu);
+    }
+
+    @Transactional
+    public void deleteMenu(Long storeId, Long menuId, MenuDeleteRequestDto deleteRequestDto) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
+
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_MENU));
+
+        if (!store.getUser().getId().equals(deleteRequestDto.getUserId())) {
+            throw new ResponseException(ResponseCode.INVALID_PERMISSION);
+        }
+
+        // 메뉴 삭제
+        menu.softDelete();
     }
 }
