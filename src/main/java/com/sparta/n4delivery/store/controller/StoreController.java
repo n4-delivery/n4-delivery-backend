@@ -72,31 +72,31 @@ public class StoreController {
 //    ResponseStoreDto response = storeService.updateStore(token, storeId, storeDto);
 //    return ResponseEntity.ok(response);
 //  }
-
-  // 가게 다건 조회
-  @GetMapping
-  public ResponseEntity<PaginatedStoreResponse> getStores(
-      @RequestParam String name,
-      @RequestParam int page,
-      @RequestParam int size) {
-    PaginatedStoreResponse response = storeService.getStores(name, page, size);
-    return ResponseEntity.ok(response);
-  }
-
-  // 가게 단건 조회
-  @GetMapping("/{storeId}")
-  public ResponseEntity<StoreDetailResponse> getStoreDetail(@PathVariable Long storeId) {
-    StoreDetailResponse response = storeService.getStoreDetail(storeId);
-    return ResponseEntity.ok(response);
-  }
-
-//  // 가게 삭제
-//  @DeleteMapping("/{storeId}")
-//  public ResponseEntity<?> deleteStore(
-//      @RequestHeader("Authorization") String authorizationHeader,
-//      @PathVariable Long storeId) {
-//    String token = authorizationHeader.replace("Bearer ", "");
-//    storeService.deleteStore(token, storeId);
-//    return ResponseEntity.noContent().build();
+//
+//  // 가게 다건 조회
+//  @GetMapping
+//  public ResponseEntity<PaginatedStoreResponse> getStores(
+//      @RequestParam String name,
+//      @RequestParam int page,
+//      @RequestParam int size) {
+//    PaginatedStoreResponse response = storeService.getStores(name, page, size);
+//    return ResponseEntity.ok(response);
 //  }
+//
+//  // 가게 단건 조회
+//  @GetMapping("/{storeId}")
+//  public ResponseEntity<StoreDetailResponse> getStoreDetail(@PathVariable Long storeId) {
+//    StoreDetailResponse response = storeService.getStoreDetail(storeId);
+//    return ResponseEntity.ok(response);
+//  }
+
+  // 가게 삭제
+  @DeleteMapping("/{storeId}")
+  public ResponseEntity<?> deleteStore(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @PathVariable Long storeId) {
+    String token = authorizationHeader.replace("Bearer ", "");
+    storeService.deleteStore(token, storeId);
+    return ResponseEntity.noContent().build();
+  }
 }
