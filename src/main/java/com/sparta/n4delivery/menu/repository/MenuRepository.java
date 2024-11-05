@@ -13,7 +13,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     boolean existsByStoreAndNameAndIdNot(Store store, String name, Long menuId);
 
     List<Menu> findAllByIdIn(List<Long> menuIdList);
-    
-    boolean existsByStoreAndName(Store store, String name);
 
 }
