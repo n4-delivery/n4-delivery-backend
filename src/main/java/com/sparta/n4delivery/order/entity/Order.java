@@ -2,6 +2,8 @@ package com.sparta.n4delivery.order.entity;
 
 import com.sparta.n4delivery.common.entity.Timestamped;
 import com.sparta.n4delivery.enums.OrderState;
+import com.sparta.n4delivery.enums.ResponseCode;
+import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
@@ -10,6 +12,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 주문에 대한 엔티티 클래스
+ *
+ * @since 2024-11-05
+ */
 @Getter
 @Builder
 @NoArgsConstructor
@@ -41,5 +48,15 @@ public class Order extends Timestamped {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     @Builder.Default
-    private List<OrderDetails> orderDetails = new ArrayList<>();
+    private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    public void updateState(OrderState state) {
+        if (state == OrderState.CANCEL && this.state != OrderState.REQUEST)
+            throw new ResponseException(ResponseCode.ALREADY_ACCEPT_ORDER);
+
+        if(state == OrderState.COMPLETE)
+            throw new ResponseException(ResponseCode.ALREADY_COMPLETE_ORDER);
+
+        this.state = state;
+    }
 }

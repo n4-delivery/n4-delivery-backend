@@ -63,7 +63,6 @@ public enum ResponseCode {
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND, "존재하지 않는 메뉴"),
     INACTIVE_STORE(HttpStatus.NOT_FOUND, "폐업한 가게"),
 
-    // test push
     // 409
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "중복된 이메일"),
     ALREADY_MENU(HttpStatus.CONFLICT, "이미 등록된 메뉴"),
@@ -80,7 +79,12 @@ public enum ResponseCode {
     // === MG ===
 
     // === HJ ===
-
+    CLOSED_STORE(HttpStatus.BAD_REQUEST, "가게가 오픈 상태가 아닙니다."),
+    NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
+    ALREADY_ACCEPT_ORDER(HttpStatus.BAD_REQUEST, "이미 주문이 접수되었습니다."),
+    ALREADY_COMPLETE_ORDER(HttpStatus.BAD_REQUEST, "이미 배달이 완료되었습니다."),
+    ALREADY_REVIEW(HttpStatus.BAD_REQUEST, "이미 해당 주문에 리뷰를 작성했습니다."),
+    NOT_COMPLETE_ORDER(HttpStatus.BAD_REQUEST, "아직 배달이 완료되지 않았습니다.");
     // ===
 
     private final HttpStatus httpStatus;

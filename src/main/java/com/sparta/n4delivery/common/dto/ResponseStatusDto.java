@@ -1,6 +1,7 @@
 package com.sparta.n4delivery.common.dto;
 
 import com.sparta.n4delivery.enums.ResponseCode;
+import com.sparta.n4delivery.exception.ResponseException;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,13 @@ public class ResponseStatusDto {
     private int state;
     private String message;
     private String url;
+
+    public ResponseStatusDto(ResponseException ex, String requestUrl) {
+        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        state = ex.getResponseCode().getHttpStatus().value();
+        message = ex.getMessage();
+        url = requestUrl;
+    }
 
     public ResponseStatusDto(ResponseCode responseCode, String requestUrl) {
         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
