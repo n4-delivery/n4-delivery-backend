@@ -25,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResponseDto {
     private Long id;
+    private Long userId;
     private Long storeId;
     private String storeName;
     private OrderState orderState;
@@ -58,6 +59,7 @@ public class OrderResponseDto {
     public static OrderResponseDto createOrderResponseDto(Store store, Order order, List<OrderDetail> orderDetails) {
         OrderResponseDto responseDto = new OrderResponseDto();
         responseDto.setId(order.getId());
+        responseDto.setUserId(order.getUser().getId());
         responseDto.setStoreId(store.getId());
         responseDto.setStoreName(store.getName());
         responseDto.setOrderState(order.getState());
