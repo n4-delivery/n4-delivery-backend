@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +37,7 @@ public class UserService {
         }
 
         addJwtToCookie(user, res);
-        return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
+        return UserResponseDto.from(user);
     }
 
     public UserResponseDto registerUser(UserRequestDto requestDto, UserType userType) {
@@ -51,7 +52,7 @@ public class UserService {
         // 유저 생성 및 저장
         User user = requestDto.convertDtoToEntity(encodedPassword, userType);
         userRepository.save(user);
-        return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
+        return UserResponseDto.from(user);
     }
 
     /**
@@ -70,5 +71,14 @@ public class UserService {
 
         // Response 객체에 Cookie 추가
         res.addCookie(cookie);
+    }
+
+    @Transactional
+    public UserResponseDto deleteUser(User user, UserRequestDto requestDto) {
+        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
+            throw new ResponseException(ResponseCode.NOT_MATCH_PASSWORD);
+
+        user.delete();
+        return UserResponseDto.from(user);
     }
 }
