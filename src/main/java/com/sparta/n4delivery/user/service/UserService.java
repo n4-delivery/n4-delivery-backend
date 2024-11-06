@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.user.service;
 
+import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.user.dto.UserRequestDto;
 import com.sparta.n4delivery.user.entity.User;
 import com.sparta.n4delivery.user.repository.UserRepository;
@@ -24,12 +25,12 @@ public class UserService {
     public void registerUser(UserRequestDto requestDto) {
         // 유저 이름 중복 확인
         if (userRepository.findByUsername(requestDto.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username is already taken.");
+            throw new ResponseException("Username is already taken.");
         }
 
         // 이메일 중복 확인
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email is already registered.");
+            throw new ResponseException("Email is already registered.");
         }
 
         // 비밀번호 암호화
