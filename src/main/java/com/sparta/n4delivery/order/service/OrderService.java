@@ -59,7 +59,7 @@ public class OrderService {
         orderRepository.save(order);
         List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
         orderDetailsRepository.saveAll(orderDetails);
-        return OrderResponseDto.createOrderResponseDto(store, menus, order, orderDetails);
+        return OrderResponseDto.createOrderResponseDto(store, order, orderDetails);
     }
 
     /**
@@ -86,8 +86,7 @@ public class OrderService {
      * @since 2024-11-05
      */
     public PageResponseDto<List<OrderResponseDto>> searchOrders(Long storeId, int page, int size) {
-        Store store = findStore(storeId);
-        Page<Order> orders = orderRepository.findAllByStoreIdOrderByUpdatedAtDesc(store.getId(), PageRequest.of(page, size));
+        Page<Order> orders = orderRepository.findAllByStoreIdOrderByUpdatedAtDesc(storeId, PageRequest.of(page, size));
         return createPageResponseDto(orders);
     }
 
