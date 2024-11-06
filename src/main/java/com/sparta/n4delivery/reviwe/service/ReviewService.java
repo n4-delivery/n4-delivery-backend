@@ -11,7 +11,6 @@ import com.sparta.n4delivery.reviwe.dto.response.ReviewResponseDto;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.reviwe.repository.ReviewRepository;
 import com.sparta.n4delivery.user.entity.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,16 +35,14 @@ public class ReviewService {
     /**
      * 리뷰 생성 메서드
      *
-     * @param req        HttpServletRequest 객체
+     * @param user       로그인한 유저
      * @param storeId    리뷰를 남길 가게 식별자
      * @param orderId    리뷰를 남길 주문 식별자
      * @param requestDto 리뷰 생성 요청 DTO 객체
      * @return 생성된 리뷰 정보를 담은 응답 DTO 객체
      * @since 2024-11-05
      */
-    public ReviewResponseDto createReview(HttpServletRequest req, Long storeId, Long orderId, ReviewRequestDto requestDto) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public ReviewResponseDto createReview(User user, Long storeId, Long orderId, ReviewRequestDto requestDto) {
         Order order = findOrder(orderId);
         validateReviewForCreate(order.getId());
         Review review = requestDto.convertDtoToEntity(user, order, storeId);
@@ -56,15 +53,13 @@ public class ReviewService {
     /**
      * 리뷰 검색 메서드(내가 작성한)
      *
-     * @param req  HttpServletRequest 객체
+     * @param user 로그인한 유저
      * @param page 페이지 번호
      * @param size 페이지 크기
      * @return 검색된 리뷰 목록과 페이징 정보를 담은 응답 DTO
      * @since 2024-11-05
      */
-    public PageResponseDto<List<ReviewResponseDto>> searchReviews(HttpServletRequest req, int page, int size) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public PageResponseDto<List<ReviewResponseDto>> searchReviews(User user, int page, int size) {
         Page<Review> reviews = reviewRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId(), PageRequest.of(page, size));
         return createPageResponseDto(user, reviews);
     }
@@ -72,16 +67,14 @@ public class ReviewService {
     /**
      * 가게 리뷰 검색 메서드(가게)
      *
-     * @param req     HttpServletRequest 객체
+     * @param user    로그인한 유저
      * @param storeId 가게 식별자
      * @param page    페이지 번호
      * @param size    페이지 크기
      * @return 검색된 리뷰 목록과 페이징 정보를 담은 응답 DTO
      * @since 2024-11-05
      */
-    public PageResponseDto<List<ReviewResponseDto>> searchReviews(HttpServletRequest req, Long storeId, int page, int size) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public PageResponseDto<List<ReviewResponseDto>> searchReviews(User user, Long storeId, int page, int size) {
         Page<Review> reviews = reviewRepository.findAllByStoreIdOrderByUpdatedAtDesc(storeId, PageRequest.of(page, size));
         return createPageResponseDto(user, reviews);
     }
@@ -89,14 +82,12 @@ public class ReviewService {
     /**
      * 주어진 주문에 대한 리뷰를 조회합니다.
      *
-     * @param req     HttpServletRequest 객체 (현재는 사용되지 않음)
+     * @param user    로그인한 유저
      * @param orderId 조회할 리뷰가 속한 주문의 ID
      * @return 조회된 리뷰 정보를 담은 ReviewResponseDto 객체
      * @since 2024-11-05
      */
-    public ReviewResponseDto findReview(HttpServletRequest req, Long orderId) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public ReviewResponseDto findReview(User user, Long orderId) {
         Review review = reviewRepository.findByOrderIdOrderByUpdatedAtDesc(orderId);
         return ReviewResponseDto.createResponseDto(user, review);
     }
@@ -104,15 +95,13 @@ public class ReviewService {
     /**
      * 리뷰를 수정합니다.
      *
-     * @param reviewId   수정할 리뷰의 ID
+     * @param user       로그인한 유저
      * @param requestDto 수정할 리뷰 정보
      * @return 수정된 리뷰 정보를 담은 ReviewResponseDto 객체
      * @since 2024-11-05
      */
     @Transactional
-    public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public ReviewResponseDto updateReview(User user, Long reviewId, ReviewRequestDto requestDto) {
         Review review = findReview(reviewId);
         isMyReview(user.getId(), review.getId());
         review.update(requestDto);
@@ -122,13 +111,12 @@ public class ReviewService {
     /**
      * 특정 리뷰를 삭제합니다.
      *
+     * @param user     로그인한 유저
      * @param reviewId 삭제할 리뷰의 ID
      * @return 삭제된 리뷰 정보를 담은 ReviewResponseDto 객체
      * @since 2024-11-05
      */
-    public ReviewResponseDto deleteReview(Long reviewId) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).nickname("홍길동").build();
+    public ReviewResponseDto deleteReview(User user, Long reviewId) {
         Review review = findReview(reviewId);
         isMyReview(user.getId(), review.getId());
         reviewRepository.delete(review);

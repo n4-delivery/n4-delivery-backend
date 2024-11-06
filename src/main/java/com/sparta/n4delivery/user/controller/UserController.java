@@ -2,6 +2,7 @@ package com.sparta.n4delivery.user.controller;
 
 import com.sparta.n4delivery.user.dto.UserRequestDto;
 import com.sparta.n4delivery.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseUserDto> login(
+            HttpServletResponse res,
+            @RequestBody UserDto userDto) {
+        ResponseUserDto response = userService.login(res, userDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/register")

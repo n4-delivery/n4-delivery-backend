@@ -44,16 +44,14 @@ public class OrderService {
     /**
      * 주문 생성
      *
-     * @param req        사용자 요청 (현재는 미사용 - 추후 쿠키 등에서 사용자 정보 추출 예정)
+     * @param user       현재 로그인한 유저
      * @param storeId    주문할 가게 ID
      * @param requestDto 주문 생성 요청 DTO
      * @return 생성된 주문 정보 (응답 DTO)
      * @since 2024-11-05
      */
     @Transactional
-    public OrderResponseDto createOrder(HttpServletRequest req, Long storeId, OrderCreateRequestDto requestDto) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).build();
+    public OrderResponseDto createOrder(User user, Long storeId, OrderCreateRequestDto requestDto) {
         Store store = findStore(storeId);
         validateOrderForCreate(store);
         List<Menu> menus = searchOrderMenus(requestDto.getOrderDetails());
@@ -67,15 +65,13 @@ public class OrderService {
     /**
      * 사용자 주문 목록 조회 메서드 (페이징 처리)
      *
-     * @param req  사용자 요청 (현재는 미사용 - 추후 쿠키 등에서 사용자 정보 추출 예정)
+     * @param user 현재 로그인한 유저
      * @param page 현재 페이지 번호
      * @param size 한 페이지당 조회할 주문 건수
      * @return 주문 목록 응답 DTO (페이징 정보 포함)
      * @since 2024-11-05
      */
-    public PageResponseDto<List<OrderResponseDto>> searchOrders(HttpServletRequest req, int page, int size) {
-        // TODO. khj cookie에서 얻어오는걸로 바꿔줄 것.
-        User user = User.builder().id(1L).build();
+    public PageResponseDto<List<OrderResponseDto>> searchOrders(User user, int page, int size) {
         Page<Order> orders = orderRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId(), PageRequest.of(page, size));
         return createPageResponseDto(orders);
     }
