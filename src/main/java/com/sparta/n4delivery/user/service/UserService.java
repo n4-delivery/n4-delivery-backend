@@ -1,32 +1,42 @@
 package com.sparta.n4delivery.user.service;
 
-import com.sparta.n4delivery.jwt.JwtUtil;
-import com.sparta.n4delivery.user.dto.ResponseUserDto;
-import com.sparta.n4delivery.user.dto.UserDto;
+import com.sparta.n4delivery.user.dto.UserRequestDto;
 import com.sparta.n4delivery.user.entity.User;
 import com.sparta.n4delivery.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    public ResponseUserDto login(UserDto userDto) {
-        Optional<User> userOptional = userRepository.findByEmail(userDto.getEmail());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getPassword().equals(userDto.getPassword())) { // 비밀번호 검증
-                String token = jwtUtil.generateToken(user.getNickname()); // 변경: username 대신 nickname 사용
-                return new ResponseUserDto(token, user.getId(), user.getNickname(), user.getEmail());
-            }
+    @Transactional
+    public void registerUser(UserRequestDto requestDto) {
+        // 유저 이름 중복 확인
+        if (userRepository.findByUsername(requestDto.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username is already taken.");
         }
-        throw new RuntimeException("Invalid email or password"); // 예외 처리
+
+        // 이메일 중복 확인
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email is already registered.");
+        }
+
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+
+        // 유저 생성 및 저장
+        User user = new User(requestDto.getUsername(), encodedPassword, requestDto.getEmail());
+        userRepository.save(user);
     }
 }
