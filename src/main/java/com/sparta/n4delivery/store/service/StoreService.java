@@ -1,11 +1,10 @@
 package com.sparta.n4delivery.store.service;
 
 
+import com.sparta.n4delivery.common.util.JwtUtil;
 import com.sparta.n4delivery.enums.ResponseCode;
-import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.exception.ResponseException;
-import com.sparta.n4delivery.common.util.JwtUtil;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.store.dto.*;
 import com.sparta.n4delivery.store.entity.Store;
