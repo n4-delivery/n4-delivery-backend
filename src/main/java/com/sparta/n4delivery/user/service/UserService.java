@@ -32,9 +32,11 @@ public class UserService {
             throw new ResponseException(ResponseCode.NOT_FOUND_USER);
 
         User user = userOptional.get();
-        if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
+        if(user.getDeletedAt() != null)
+            throw new ResponseException(ResponseCode.NOT_FOUND_USER);
+
+        if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword()))
             throw new ResponseException(ResponseCode.NOT_MATCH_PASSWORD); // 예외 처리
-        }
 
         addJwtToCookie(user, res);
         return UserResponseDto.from(user);
@@ -75,10 +77,29 @@ public class UserService {
 
     @Transactional
     public UserResponseDto deleteUser(User user, UserRequestDto requestDto) {
+        User deleteUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new ResponseException(ResponseCode.NOT_FOUND_USER)
+        );
+
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword()))
             throw new ResponseException(ResponseCode.NOT_MATCH_PASSWORD);
 
-        user.delete();
+        deleteUser.delete();
+        return UserResponseDto.from(user);
+    }
+
+    @Transactional
+    public UserResponseDto updateUser(User user, UserRequestDto requestDto) {
+        // 1. 삭제할 유저가 존재하는지 검색한다.
+        User updateUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new ResponseException(ResponseCode.NOT_FOUND_USER)
+        );
+
+        // 2. 새로운 비밀번호를 암호화 한다.
+        String newPassword = passwordEncoder.encode(requestDto.getPassword());
+
+        // 3. requestDto있는 정보로 업데이트 해준다.
+        updateUser.update(requestDto, newPassword);
         return UserResponseDto.from(user);
     }
 }
