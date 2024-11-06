@@ -1,5 +1,6 @@
 //package com.sparta.n4delivery;
 //
+//import com.sparta.n4delivery.enums.StoreState;
 //import com.sparta.n4delivery.enums.UserType;
 //import com.sparta.n4delivery.menu.entity.Menu;
 //import com.sparta.n4delivery.menu.repository.MenuRepository;
@@ -44,51 +45,37 @@
 //    @Autowired
 //    private ReviewRepository reviewRepository;
 //
-//    private List<User> users;
-//    private List<User> owners;
-//    private List<Store> stores;
-//    private List<Menu> menus;
-//    private List<Order> orders;
-//
 //    @Test
 //    void contextLoads() {
-//        sampleDataUser();
-//        sampleDataStore();
-//        sampleDataOrder();
-//        sampleDataReview();
 //    }
 //
 //    @Test
-//    @Rollback(value = false)
-//    void sampleDataUser() {
-//        users = new ArrayList<>();
+//    @Rollback(false)
+//    void sampleData() {
+//        List<User> users = new ArrayList<>();
 //        for (int idx = 0; idx < 10; idx++) {
 //            String randomName = RandomStringUtils.randomAlphanumeric(10);
 //            users.add(User.builder()
 //                    .email(randomName + "@gmail.com")
 //                    .password("1234")
-//                    .userName(randomName)
+//                    .nickname(randomName)
 //                    .build());
 //        }
 //
-//        owners = new ArrayList<>();
+//        List<User> owners = new ArrayList<>();
 //        for (int idx = 0; idx < 10; idx++) {
 //            String randomName = RandomStringUtils.randomAlphanumeric(10);
 //            owners.add(User.builder()
 //                    .email(randomName + "@gmail.com")
 //                    .password("1234")
-//                    .userName(randomName)
+//                    .nickname(randomName)
 //                    .type(UserType.OWNER)
 //                    .build());
 //        }
 //        userRepository.saveAll(users);
 //        userRepository.saveAll(owners);
-//    }
 //
-//    @Test
-//    @Rollback(value = false)
-//    void sampleDataStore() {
-//        stores = new ArrayList<>();
+//        List<Store> stores = new ArrayList<>();
 //        for (User owner : owners) {
 //            for (int idx = 0; idx < Math.random() * 3; idx++) {
 //                String randomName = RandomStringUtils.randomAlphanumeric(10);
@@ -102,17 +89,13 @@
 //            }
 //        }
 //        storeRepository.saveAll(stores);
-//    }
 //
-//    @Test
-//    @Rollback(false)
-//    void sampleDataMenu() {
-//        menus = new ArrayList<>();
+//        List<Menu> menus = new ArrayList<>();
 //        for (Store store : stores) {
 //            for (int idx = 0; idx < 10; idx++) {
 //                String randomName = RandomStringUtils.randomAlphanumeric(10);
 //                Random random = new Random();
-//                int randomInt = random.nextInt(50000) + 1000; // 1000 ~ 500000
+//                int randomInt = random.nextInt(490000) + 1000; // 1000 ~ 500000
 //                menus.add(Menu.builder()
 //                        .store(store)
 //                        .name(randomName)
@@ -121,12 +104,9 @@
 //            }
 //        }
 //        menuRepository.saveAll(menus);
-//    }
 //
-//    @Test
-//    @Rollback(false)
-//    void sampleDataOrder() {
-//        orders = new ArrayList<>();
+//
+//        List<Order> orders = new ArrayList<>();
 //        for (User user : users) {
 //            for (int idx = 0; idx < 10; idx++) {
 //                Store Store = stores.get((int) (Math.random() * stores.size()));
@@ -158,11 +138,7 @@
 //        }
 //        orderRepository.saveAll(orders);
 //        orderDetailsRepository.saveAll(orderDetails);
-//    }
 //
-//    @Test
-//    @Rollback(value = false)
-//    void sampleDataReview() {
 //        List<Review> reviews = new ArrayList<>();
 //        for (Order order : orders) {
 //            String randomComment = RandomStringUtils.randomAlphanumeric(50);
@@ -177,61 +153,62 @@
 //        reviewRepository.saveAll(reviews);
 //    }
 //
-////    @Test
-////    @Rollback(false)
-////    void sampleOrderData() {
-////        List<User> users = new ArrayList<>();
-////        for (int idx = 0; idx < 10; idx++) {
-////            String randomName = RandomStringUtils.randomAlphanumeric(10);
-////            users.add(User.builder()
-////                    .email(randomName + "@gmail.com")
-////                    .password("1234")
-////                    .userName(randomName)
-////                    .build());
-////        }
-////
-////        List<User> owners = new ArrayList<>();
-////        for (int idx = 0; idx < 10; idx++) {
-////            String randomName = RandomStringUtils.randomAlphanumeric(10);
-////            owners.add(User.builder()
-////                    .email(randomName + "@gmail.com")
-////                    .password("1234")
-////                    .userName(randomName)
-////                    .type(UserType.OWNER)
-////                    .build());
-////        }
-////        userRepository.saveAll(users);
-////        userRepository.saveAll(owners);
-////
-////        List<Store> stores = new ArrayList<>();
-////        for (User owner : owners) {
-////            for (int idx = 0; idx < Math.random() * 3; idx++) {
-////                String randomName = RandomStringUtils.randomAlphanumeric(10);
-////                stores.add(Store.builder()
-////                        .user(owner)
-////                        .name(randomName)
-////                        .state(idx % 2 == 0 ? StoreState.OPEN : StoreState.CLOSE)
-////                        .openedAt(LocalTime.of(9, 0))
-////                        .closedAt(LocalTime.of(23, 59))
-////                        .minimumAmount(5000)
-////                        .build());
-////            }
-////        }
-////        storeRepository.saveAll(stores);
-////
-////        List<Menu> menus = new ArrayList<>();
-////        for (Store store : stores) {
-////            for (int idx = 0; idx < 10; idx++) {
-////                String randomName = RandomStringUtils.randomAlphanumeric(10);
-////                Random random = new Random();
-////                int randomInt = random.nextInt(50000) + 1000; // 1000 ~ 500000
-////                menus.add(Menu.builder()
-////                        .store(store)
-////                        .name(randomName)
-////                        .price(randomInt)
-////                        .build());
-////            }
-////        }
-////        menuRepository.saveAll(menus);
-////    }
+//  @Test
+//  @Rollback(false)
+//  void sampleOrderData() {
+//        List<User> users = new ArrayList<>();
+//        for (int idx = 0; idx < 10; idx++) {
+//            String randomName = RandomStringUtils.randomAlphanumeric(10);
+//            users.add(User.builder()
+//                    .email(randomName + "@gmail.com")
+//                    .password("1234")
+//                    .nickname(randomName)
+//                    .build());
+//        }
+//
+//        List<User> owners = new ArrayList<>();
+//        for (int idx = 0; idx < 10; idx++) {
+//            String randomName = RandomStringUtils.randomAlphanumeric(10);
+//            owners.add(User.builder()
+//                    .email(randomName + "@gmail.com")
+//                    .password("1234")
+//                    .nickname(randomName)
+//                    .type(UserType.OWNER)
+//                    .build());
+//        }
+//        userRepository.saveAll(users);
+//        userRepository.saveAll(owners);
+//
+//        List<Store> stores = new ArrayList<>();
+//        for (User owner : owners) {
+//            for (int idx = 0; idx < Math.random() * 3; idx++) {
+//                String randomName = RandomStringUtils.randomAlphanumeric(10);
+//                stores.add(Store.builder()
+//                        .user(owner)
+//                        .name(randomName)
+//                        .state(idx % 2 == 0 ? StoreState.OPEN : StoreState.CLOSE)
+//                        .openedAt(LocalTime.of(9, 0))
+//                        .closedAt(LocalTime.of(23, 59))
+//                        .minimumAmount(5000)
+//                        .build());
+//            }
+//        }
+//        storeRepository.saveAll(stores);
+//
+//        List<Menu> menus = new ArrayList<>();
+//        for (Store store : stores) {
+//            for (int idx = 0; idx < 10; idx++) {
+//                String randomName = RandomStringUtils.randomAlphanumeric(10);
+//                Random random = new Random();
+////                int randomInt = random.nextInt(490000) + 1000; // 1000 ~ 500000
+//                int randomInt = random.nextInt(50000) + 1000; // 1000 ~ 500000
+//                menus.add(Menu.builder()
+//                        .store(store)
+//                        .name(randomName)
+//                        .price(randomInt)
+//                        .build());
+//            }
+//        }
+//        menuRepository.saveAll(menus);
+//    }
 //}
