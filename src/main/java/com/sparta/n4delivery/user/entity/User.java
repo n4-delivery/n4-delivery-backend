@@ -5,6 +5,7 @@ import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.store.entity.Store;
+import com.sparta.n4delivery.user.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,5 +60,10 @@ public class User extends Timestamped {
 
     public void delete() {
         deletedAt = LocalDateTime.now();
+    }
+
+    public void update(UserRequestDto requestDto, String password) {
+        userName = requestDto.getUsername();
+        this.password = password;
     }
 }
