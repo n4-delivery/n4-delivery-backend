@@ -85,6 +85,7 @@ public enum ResponseCode {
     ALREADY_COMPLETE_ORDER(HttpStatus.BAD_REQUEST, "이미 배달이 완료되었습니다."),
     ALREADY_REVIEW(HttpStatus.BAD_REQUEST, "이미 해당 주문에 리뷰를 작성했습니다."),
     NOT_COMPLETE_ORDER(HttpStatus.BAD_REQUEST, "아직 배달이 완료되지 않았습니다."),
+    UNDER_MINIMUM_PRICE(HttpStatus.BAD_REQUEST, "최소 금액보다 모자랍니다."),
     NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "해당 주문건의 리뷰를 찾을 수 없습니다.");
     // ===
 

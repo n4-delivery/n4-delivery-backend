@@ -53,11 +53,12 @@ public class OrderService {
     @Transactional
     public OrderResponseDto createOrder(User user, Long storeId, OrderCreateRequestDto requestDto) {
         Store store = findStore(storeId);
-        validateOrderForCreate(store);
         List<Menu> menus = searchOrderMenus(requestDto.getOrderDetails());
         Order order = requestDto.convertDtoToEntity(user, store);
         orderRepository.save(order);
+
         List<OrderDetail> orderDetails = requestDto.convertEntityToDto(order, menus);
+        validateOrderForCreate(store, order.getTotalPrice());
         orderDetailsRepository.saveAll(orderDetails);
         return OrderResponseDto.createOrderResponseDto(store, order, orderDetails);
     }
@@ -152,11 +153,20 @@ public class OrderService {
      * 가게 생성 가능 여부 검증 메서드
      *
      * @param store 검증할 가게 정보
+     * @param price 현재 주문할 가격
      * @throws ResponseException 주문 생성 불가능한 경우 예외를 던집니다.
      */
-    private void validateOrderForCreate(Store store) {
-        if (store.getDeletedAt() != null) {
+    private void validateOrderForCreate(Store store, int price) {
+        if (store.getDeletedAt() != null)
             throw new ResponseException(ResponseCode.CLOSED_STORE);
+
+        if (price < store.getMinimumAmount()) {
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("최소금액: ");
+            errorMsg.append(store.getMinimumAmount());
+            errorMsg.append(", 현재 금액:");
+            errorMsg.append(price);
+            throw new ResponseException(ResponseCode.UNDER_MINIMUM_PRICE, errorMsg.toString());
         }
 
         LocalTime now = LocalTime.now();
