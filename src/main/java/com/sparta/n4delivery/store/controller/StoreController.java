@@ -1,11 +1,6 @@
 package com.sparta.n4delivery.store.controller;
 
-import com.sparta.n4delivery.enums.ResponseCode;
-import com.sparta.n4delivery.enums.StoreState;
-import com.sparta.n4delivery.enums.UserType;
-import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.login.LoginUser;
-import com.sparta.n4delivery.menu.dto.MenuDeleteRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.menu.service.MenuService;
@@ -13,16 +8,12 @@ import com.sparta.n4delivery.store.dto.PaginatedStoreResponse;
 import com.sparta.n4delivery.store.dto.ResponseStoreDto;
 import com.sparta.n4delivery.store.dto.StoreDetailResponse;
 import com.sparta.n4delivery.store.dto.StoreDto;
-import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.service.StoreService;
 import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,33 +30,34 @@ public class StoreController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{storeId}/menu")
+    @PostMapping("/{storeId}/menus")
     public ResponseEntity<MenuResponseDto> createMenu(
+            @LoginUser User user,
             @PathVariable Long storeId,
             @RequestBody MenuRequestDto menuRequestDto
     ) {
-        menuService.createMenu(storeId, menuRequestDto);
-        MenuResponseDto response = new MenuResponseDto();
+        MenuResponseDto response = menuService.createMenu(user, storeId, menuRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/{storeId}/menu/{menuId}")
+    @PutMapping("/{storeId}/menus/{menuId}")
     public ResponseEntity<MenuResponseDto> updateMenu(
+            @LoginUser User user,
             @PathVariable Long storeId,
             @PathVariable Long menuId,
             @RequestBody MenuRequestDto menuRequestDto
     ) {
-        MenuResponseDto response = menuService.updateMenu(storeId, menuId, menuRequestDto);
+        MenuResponseDto response = menuService.updateMenu(user, storeId, menuId, menuRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{storeId}/menu/{menuId}")
+    @DeleteMapping("/{storeId}/menus/{menuId}")
     public ResponseEntity<Void> deleteMenu(
+            @LoginUser User user,
             @PathVariable Long storeId,
-            @PathVariable Long menuId,
-            @RequestBody MenuDeleteRequestDto deleteRequestDto
+            @PathVariable Long menuId
     ) {
-        menuService.deleteMenu(storeId, menuId, deleteRequestDto);
+        menuService.deleteMenu(user, storeId, menuId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

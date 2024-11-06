@@ -32,14 +32,14 @@ public class UserController {
     }
 
     @PostMapping("/owners/register")
-    public ResponseEntity<String> registerOwner(@RequestBody @Valid UserRequestDto requestDto) {
-        userService.registerUser(requestDto, UserType.OWNER);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    public ResponseEntity<UserResponseDto> registerOwner(@RequestBody @Valid UserRequestDto requestDto) {
+        UserResponseDto response = userService.registerUser(requestDto, UserType.OWNER);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/users/register")
-    public ResponseEntity<String> registerUser(@RequestBody @Valid UserRequestDto requestDto) {
-        userService.registerUser(requestDto, UserType.USER);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody @Valid UserRequestDto requestDto) {
+        UserResponseDto response = userService.registerUser(requestDto, UserType.USER);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

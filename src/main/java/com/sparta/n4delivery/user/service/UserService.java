@@ -39,7 +39,7 @@ public class UserService {
         return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
     }
 
-    public void registerUser(UserRequestDto requestDto, UserType userType) {
+    public UserResponseDto registerUser(UserRequestDto requestDto, UserType userType) {
         // 이메일 중복 확인
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new ResponseException(ResponseCode.DUPLICATED_EMAIL);
@@ -51,6 +51,7 @@ public class UserService {
         // 유저 생성 및 저장
         User user = requestDto.convertDtoToEntity(encodedPassword, userType);
         userRepository.save(user);
+        return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
     }
 
     /**

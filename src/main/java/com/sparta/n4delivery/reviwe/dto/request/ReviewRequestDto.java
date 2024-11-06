@@ -4,6 +4,8 @@ import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.user.entity.User;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReviewRequestDto {
-    @Size(min = 1, max = 5, message = "1~5사이의 별점을 입력해주세요.")
+    @DecimalMax(value = "5.0", message = "1~5사이의 별점을 입력해주세요.")
+    @DecimalMin(value = "1.0", message = "1~5사이의 별점을 입력해주세요.")
     private double score;
     private String comment;
 

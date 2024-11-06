@@ -17,6 +17,4 @@ public class MenuRequestDto {
     private Integer price;
 
     private MenuState state;
-
-    private Long userId; // JWT 생성 전 임시 userId
 }

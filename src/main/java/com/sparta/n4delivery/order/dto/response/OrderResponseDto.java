@@ -83,7 +83,8 @@ public class OrderResponseDto {
         for (OrderDetail orderDetail : orderDetails) {
             for (Menu menu : menus) {
                 if (menu.getId().equals(orderDetail.getMenu().getId())) {
-                    orderDetailResponseDtoList.add(OrderDetailResponseDto.createResponseDto(menu, orderDetail));
+                    orderDetailResponseDtoList
+                            .add(OrderDetailResponseDto.createResponseDto(menu, orderDetail));
                 }
             }
         }

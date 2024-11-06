@@ -103,7 +103,7 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto updateReview(User user, Long reviewId, ReviewRequestDto requestDto) {
         Review review = findReview(reviewId);
-        isMyReview(user.getId(), review.getId());
+        isMyReview(user.getId(), review.getUser().getId());
         review.update(requestDto);
         return ReviewResponseDto.createResponseDto(user, review);
     }
@@ -118,7 +118,7 @@ public class ReviewService {
      */
     public ReviewResponseDto deleteReview(User user, Long reviewId) {
         Review review = findReview(reviewId);
-        isMyReview(user.getId(), review.getId());
+        isMyReview(user.getId(), review.getUser().getId());
         reviewRepository.delete(review);
         return ReviewResponseDto.createResponseDto(user, review);
     }
@@ -171,13 +171,13 @@ public class ReviewService {
     /**
      * 현재 사용자가 리뷰의 작성자인지 검사합니다.
      *
-     * @param userId  현재 사용자의 ID
-     * @param orderId 리뷰가 속한 주문의 ID
+     * @param userId   현재 사용자의 ID
+     * @param reviewId 리뷰가 속한 주문의 ID
      * @throws ResponseException 사용자 권한이 없을 경우 발생
      * @since 2024-11-05
      */
-    private void isMyReview(Long userId, Long orderId) {
-        if (!Objects.equals(userId, orderId))
+    private void isMyReview(Long userId, Long reviewId) {
+        if (!Objects.equals(userId, reviewId))
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);
     }
 

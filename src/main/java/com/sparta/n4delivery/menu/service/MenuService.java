@@ -2,13 +2,13 @@ package com.sparta.n4delivery.menu.service;
 
 import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.exception.ResponseException;
-import com.sparta.n4delivery.menu.dto.MenuDeleteRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
 import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.repository.StoreRepository;
+import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +20,11 @@ public class MenuService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public MenuResponseDto createMenu(Long storeId, MenuRequestDto menuRequestDto) {
-
+    public MenuResponseDto createMenu(User user, Long storeId, MenuRequestDto menuRequestDto) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
 
-        if (!store.getUser().getId().equals(menuRequestDto.getUserId())) {
+        if (!store.getUser().getId().equals(user.getId())) {
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);
         }
 
@@ -40,19 +39,18 @@ public class MenuService {
                 .build();
 
         menuRepository.save(menu);
-
         return MenuResponseDto.from(menu);
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(Long storeId, Long menuId, MenuRequestDto menuRequestDto) {
+    public MenuResponseDto updateMenu(User user, Long storeId, Long menuId, MenuRequestDto menuRequestDto) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
 
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_MENU));
 
-        if (!store.getUser().getId().equals(menuRequestDto.getUserId())) {
+        if (!store.getUser().getId().equals(user.getId())) {
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);
         }
 
@@ -66,14 +64,14 @@ public class MenuService {
     }
 
     @Transactional
-    public void deleteMenu(Long storeId, Long menuId, MenuDeleteRequestDto deleteRequestDto) {
+    public void deleteMenu(User user, Long storeId, Long menuId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
 
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_MENU));
 
-        if (!store.getUser().getId().equals(deleteRequestDto.getUserId())) {
+        if (!store.getUser().getId().equals(user.getId())) {
             throw new ResponseException(ResponseCode.INVALID_PERMISSION);
         }
 
