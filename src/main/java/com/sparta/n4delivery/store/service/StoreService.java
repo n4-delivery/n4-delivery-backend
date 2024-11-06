@@ -3,7 +3,7 @@ package com.sparta.n4delivery.store.service;
 
 import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.exception.ResponseException;
-import com.sparta.n4delivery.jwt.JwtUtil;
+import com.sparta.n4delivery.common.util.JwtUtil;
 import com.sparta.n4delivery.menu.dto.MenuResponseDto;
 import com.sparta.n4delivery.store.dto.*;
 import com.sparta.n4delivery.store.entity.Store;
@@ -34,12 +34,7 @@ public class StoreService {
 
     //가게 수정 메서드
     @Transactional
-    public ResponseStoreDto updateStore(String token, Long storeId, StoreDto storeDto) {
-        // JWT 토큰에서 사용자 이메일을 추출
-        String email = jwtUtil.extractUsername(token);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
-
+    public ResponseStoreDto updateStore(User user, Long storeId, StoreDto storeDto) {
         // 가게 조회 및 사용자 소유 확인
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
@@ -106,12 +101,7 @@ public class StoreService {
     }
 
     @Transactional
-    public void deleteStore(String token, Long storeId) {
-        // JWT 토큰에서 사용자 이메일을 추출
-        String email = jwtUtil.extractUsername(token);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_USER));
-
+    public void deleteStore(User user, Long storeId) {
         // 가게 조회 및 소유자 확인
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
