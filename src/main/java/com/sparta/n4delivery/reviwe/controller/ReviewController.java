@@ -6,6 +6,7 @@ import com.sparta.n4delivery.reviwe.dto.request.ReviewRequestDto;
 import com.sparta.n4delivery.reviwe.dto.response.ReviewResponseDto;
 import com.sparta.n4delivery.reviwe.service.ReviewService;
 import com.sparta.n4delivery.user.entity.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class ReviewController {
             @LoginUser User user,
             @PathVariable Long storeId,
             @PathVariable Long orderId,
-            @RequestBody ReviewRequestDto requestDto) {
+            @RequestBody @Valid ReviewRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(reviewService.createReview(user, storeId, orderId, requestDto));
@@ -115,7 +116,7 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDto> updateReview(
             @LoginUser User user,
             @PathVariable Long reviewId,
-            @RequestBody ReviewRequestDto requestDto) {
+            @RequestBody @Valid ReviewRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(reviewService.updateReview(user, reviewId, requestDto));

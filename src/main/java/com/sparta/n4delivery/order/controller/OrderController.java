@@ -8,6 +8,7 @@ import com.sparta.n4delivery.order.dto.response.OrderResponseDto;
 import com.sparta.n4delivery.order.service.OrderService;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> createOrder(
             @LoginUser User user,
             @PathVariable Long storeId,
-            @RequestBody OrderCreateRequestDto requestDto) {
+            @RequestBody @Valid OrderCreateRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(orderService.createOrder(user, storeId, requestDto));
@@ -95,7 +96,7 @@ public class OrderController {
     @PutMapping("/order/{orderId}")
     public ResponseEntity<OrderResponseDto> updateOrder(
             @PathVariable Long orderId,
-            @RequestBody OrderUpdateRequestDto requestDto) {
+            @RequestBody @Valid OrderUpdateRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderService.updateOrder(orderId, requestDto));

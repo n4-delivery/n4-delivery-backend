@@ -3,6 +3,7 @@ package com.sparta.n4delivery.user.service;
 import com.sparta.n4delivery.common.util.JwtUtil;
 import com.sparta.n4delivery.common.util.PasswordEncoder;
 import com.sparta.n4delivery.enums.ResponseCode;
+import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.user.dto.UserRequestDto;
 import com.sparta.n4delivery.user.dto.UserResponseDto;
@@ -30,14 +31,15 @@ public class UserService {
             throw new ResponseException(ResponseCode.NOT_FOUND_USER);
 
         User user = userOptional.get();
-        if (!user.getPassword().equals(userDto.getPassword()))
+        if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
             throw new ResponseException(ResponseCode.NOT_MATCH_PASSWORD); // 예외 처리
+        }
 
         addJwtToCookie(user, res);
         return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
     }
 
-    public void registerUser(UserRequestDto requestDto) {
+    public void registerUser(UserRequestDto requestDto, UserType userType) {
         // 이메일 중복 확인
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new ResponseException(ResponseCode.DUPLICATED_EMAIL);
@@ -47,7 +49,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         // 유저 생성 및 저장
-        User user = requestDto.convertDtoToEntity(encodedPassword);
+        User user = requestDto.convertDtoToEntity(encodedPassword, userType);
         userRepository.save(user);
     }
 

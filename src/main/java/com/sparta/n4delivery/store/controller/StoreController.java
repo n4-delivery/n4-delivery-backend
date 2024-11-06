@@ -1,5 +1,9 @@
 package com.sparta.n4delivery.store.controller;
 
+import com.sparta.n4delivery.enums.ResponseCode;
+import com.sparta.n4delivery.enums.StoreState;
+import com.sparta.n4delivery.enums.UserType;
+import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.login.LoginUser;
 import com.sparta.n4delivery.menu.dto.MenuDeleteRequestDto;
 import com.sparta.n4delivery.menu.dto.MenuRequestDto;
@@ -9,6 +13,7 @@ import com.sparta.n4delivery.store.dto.PaginatedStoreResponse;
 import com.sparta.n4delivery.store.dto.ResponseStoreDto;
 import com.sparta.n4delivery.store.dto.StoreDetailResponse;
 import com.sparta.n4delivery.store.dto.StoreDto;
+import com.sparta.n4delivery.store.entity.Store;
 import com.sparta.n4delivery.store.service.StoreService;
 import com.sparta.n4delivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +21,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/stores")
 public class StoreController {
     private final StoreService storeService;
     private final MenuService menuService;
+
+    @PostMapping
+    public ResponseEntity<ResponseStoreDto> createStore(
+            @LoginUser User user,
+            @RequestBody StoreDto storeDto) {
+        ResponseStoreDto response = storeService.createStore(user, storeDto);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/{storeId}/menu")
     public ResponseEntity<MenuResponseDto> createMenu(

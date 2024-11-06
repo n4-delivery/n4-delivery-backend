@@ -64,6 +64,8 @@ public class AuthFilter implements Filter {
         if (!StringUtils.hasText(url))
             return true;
         return url.contains("api/users/login") ||
+                url.contains("api/users/register") ||
+                url.contains("api/owners/register") ||
                 url.startsWith("/css") ||
                 url.startsWith("/js");
     }

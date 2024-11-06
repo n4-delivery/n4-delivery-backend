@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.user.controller;
 
+import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.user.dto.UserRequestDto;
 import com.sparta.n4delivery.user.dto.UserResponseDto;
 import com.sparta.n4delivery.user.service.UserService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -22,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public ResponseEntity<UserResponseDto> login(
             HttpServletResponse res,
             @RequestBody UserRequestDto userDto) {
@@ -30,9 +31,15 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/owners/register")
+    public ResponseEntity<String> registerOwner(@RequestBody @Valid UserRequestDto requestDto) {
+        userService.registerUser(requestDto, UserType.OWNER);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    }
+
+    @PostMapping("/users/register")
     public ResponseEntity<String> registerUser(@RequestBody @Valid UserRequestDto requestDto) {
-        userService.registerUser(requestDto);
+        userService.registerUser(requestDto, UserType.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 }

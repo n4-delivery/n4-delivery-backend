@@ -1,5 +1,6 @@
 package com.sparta.n4delivery.user.dto;
 
+import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,11 +21,12 @@ public class UserRequestDto {
     @NotBlank(message = "Email is required")
     private String email;
 
-    public User convertDtoToEntity(String password) {
+    public User convertDtoToEntity(String password, UserType userType) {
         return User.builder()
                 .userName(username)
                 .password(password)
                 .email(email)
+                .type(userType)
                 .build();
     }
 }
