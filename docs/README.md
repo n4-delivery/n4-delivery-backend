@@ -1,28 +1,28 @@
-![다운로드](https://github.com/user-attachments/assets/e49751ba-cf0c-438b-9451-2f9bb939ba31)# ![배민 사진 저장](https://github.com/user-attachments/assets/92ac11cb-5577-4093-9f68-2fc0ac94098d)  9조 아웃소싱 프로젝트 
+ ![배민 사진 저장](https://github.com/user-attachments/assets/92ac11cb-5577-4093-9f68-2fc0ac94098d)  9조 아웃소싱 프로젝트 
 
 # 배달 웹 앱
 
 <table style="width:100%; text-align:center;">
   <tr>
     <td>
-      <img src="팀원1의_사진_URL" alt="김민기" style="width:100px; height:100px; border-radius:50%;"><br>
-      <strong>서민기</strong><br>
-      로그인 및 회원가입 기능
+      <img src="https://github.com/user-attachments/assets/4e2ea7a9-d257-4173-82be-b8fb6c457e2e" alt="서민기" style="width:100px; height:100px; border-radius:50%;"><br>
+      <strong>팀장 서민기</strong><br>
+      로그인 및 회원가입 기능 개발 
     </td>
     <td>
-      <img src="팀원2의_사진_URL" alt="박지민" style="width:100px; height:100px; border-radius:50%;"><br>
-      <strong>박지민</strong><br>
-      팀원 - 프론트엔드 개발, UI/UX 디자인
+      <img src="팀원2의_사진_URL" alt="김명훈" style="width:100px; height:100px; border-radius:50%;"><br>
+      <strong>팀원 김명훈</strong><br>
+      메뉴 (생성,수정,삭제) 및 Docker설정 기능 개발
     </td>
     <td>
       <img src="팀원3의_사진_URL" alt="이수빈" style="width:100px; height:100px; border-radius:50%;"><br>
-      <strong>이수빈</strong><br>
-      팀원 - 데이터베이스 설계 및 API 문서화
+      <strong>팀원 김도현</strong><br>
+      가게 생성 및 가게 정보 (수정,조회,삭제) 기능 개발
     </td>
     <td>
       <img src="팀원4의_사진_URL" alt="정하은" style="width:100px; height:100px; border-radius:50%;"><br>
-      <strong>정하은</strong><br>
-      팀원 - 기능 개발 및 테스트
+      <strong>팀원 김현정</strong><br>
+      주문(요청, 조회, 상태 수정) 리뷰(생성, 조회, 수정, 삭제) 및 인증/인가
     </td>
   </tr>
 </table>
