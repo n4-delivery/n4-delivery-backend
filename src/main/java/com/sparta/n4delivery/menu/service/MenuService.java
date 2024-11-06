@@ -37,6 +37,7 @@ public class MenuService {
                 .store(store)
                 .name(menuRequestDto.getName())
                 .price(menuRequestDto.getPrice())
+                .state(menuRequestDto.getState())
                 .build();
 
         menuRepository.save(menu);
