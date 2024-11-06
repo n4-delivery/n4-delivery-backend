@@ -1,13 +1,16 @@
 package com.sparta.n4delivery.user.controller;
 
 import com.sparta.n4delivery.user.dto.UserRequestDto;
+import com.sparta.n4delivery.user.dto.UserResponseDto;
 import com.sparta.n4delivery.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,10 +23,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseUserDto> login(
+    public ResponseEntity<UserResponseDto> login(
             HttpServletResponse res,
-            @RequestBody UserDto userDto) {
-        ResponseUserDto response = userService.login(res, userDto);
+            @RequestBody UserRequestDto userDto) {
+        UserResponseDto response = userService.login(res, userDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -1,16 +1,15 @@
 package com.sparta.n4delivery.user.dto;
 
+import com.sparta.n4delivery.user.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestDto {
-
     @NotBlank(message = "Username is required")
     private String username;
 
@@ -20,4 +19,12 @@ public class UserRequestDto {
     @Email(message = "Please provide a valid email")
     @NotBlank(message = "Email is required")
     private String email;
+
+    public User convertDtoToEntity(String password) {
+        return User.builder()
+                .userName(username)
+                .password(password)
+                .email(email)
+                .build();
+    }
 }

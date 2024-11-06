@@ -43,10 +43,7 @@ public class StoreService {
         }
 
         // 가게 정보 업데이트
-        store.setName(storeDto.getName());
-        store.setOpenedAt(LocalTime.parse(storeDto.getOpenedAt()));
-        store.setClosedAt(LocalTime.parse(storeDto.getClosedAt()));
-        store.setMinimumAmount(storeDto.getMinimumAmount());
+        store.update(storeDto);
 
         // 업데이트된 Store 엔티티를 ResponseStoreDto로 변환하여 반환
         return new ResponseStoreDto(

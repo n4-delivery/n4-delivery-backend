@@ -39,7 +39,7 @@ public class ReviewResponseDto {
         ReviewResponseDto responseDto = new ReviewResponseDto();
         responseDto.id = review.getId();
         responseDto.userId = user.getId();
-        responseDto.userName = user.getNickname();
+        responseDto.userName = user.getUserName();
         responseDto.score = review.getScore();
         responseDto.comment = review.getComment();
         responseDto.createdAt = review.getCreatedAt();

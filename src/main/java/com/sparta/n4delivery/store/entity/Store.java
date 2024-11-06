@@ -5,19 +5,17 @@ import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.order.entity.Order;
 import com.sparta.n4delivery.reviwe.entity.Review;
+import com.sparta.n4delivery.store.dto.StoreDto;
 import com.sparta.n4delivery.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +30,6 @@ public class Store {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //가게이름
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -48,6 +45,9 @@ public class Store {
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
     private StoreState state = StoreState.OPEN;
+
+    @Column
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "store",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
@@ -67,9 +67,6 @@ public class Store {
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
-    // soft delete 지원을 위한 필드
-    private LocalDateTime deletedAt;
-
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
     }
@@ -78,4 +75,10 @@ public class Store {
         return this.deletedAt != null;
     }
 
+    public void update(StoreDto storeDto) {
+        name = storeDto.getName();
+        openedAt = LocalTime.parse(storeDto.getOpenedAt());
+        closedAt = LocalTime.parse(storeDto.getClosedAt());
+        minimumAmount = storeDto.getMinimumAmount();
+    }
 }

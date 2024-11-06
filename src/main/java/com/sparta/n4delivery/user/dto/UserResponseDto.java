@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseUserDto {
+public class UserResponseDto {
     private Long userId;
     private String nickname; // 추가: 닉네임
     private String email;
 
-    public ResponseUserDto(Long userId, String nickname, String email) {
+    public UserResponseDto(Long userId, String nickname, String email) {
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;

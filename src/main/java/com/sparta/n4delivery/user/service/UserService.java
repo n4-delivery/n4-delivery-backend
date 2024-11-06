@@ -1,19 +1,17 @@
 package com.sparta.n4delivery.user.service;
 
 import com.sparta.n4delivery.common.util.JwtUtil;
-import com.sparta.n4delivery.user.dto.ResponseUserDto;
-import com.sparta.n4delivery.user.dto.UserDto;
+import com.sparta.n4delivery.common.util.PasswordEncoder;
+import com.sparta.n4delivery.enums.ResponseCode;
 import com.sparta.n4delivery.exception.ResponseException;
 import com.sparta.n4delivery.user.dto.UserRequestDto;
+import com.sparta.n4delivery.user.dto.UserResponseDto;
 import com.sparta.n4delivery.user.entity.User;
 import com.sparta.n4delivery.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -23,37 +21,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public ResponseUserDto login(HttpServletResponse res, UserDto userDto) {
+    public UserResponseDto login(HttpServletResponse res, UserRequestDto userDto) {
         Optional<User> userOptional = userRepository.findByEmail(userDto.getEmail());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getPassword().equals(userDto.getPassword())) { // 비밀번호 검증
-                addJwtToCookie(user, res);
-                return new ResponseUserDto(user.getId(), user.getNickname(), user.getEmail());
-            }
-        }
-        throw new RuntimeException("Invalid email or password"); // 예외 처리
+        if (userOptional.isEmpty())
+            throw new ResponseException(ResponseCode.NOT_FOUND_USER);
+
+        User user = userOptional.get();
+        if (!user.getPassword().equals(userDto.getPassword()))
+            throw new ResponseException(ResponseCode.NOT_MATCH_PASSWORD); // 예외 처리
+
+        addJwtToCookie(user, res);
+        return new UserResponseDto(user.getId(), user.getUserName(), user.getEmail());
     }
 
-    @Transactional
     public void registerUser(UserRequestDto requestDto) {
-        // 유저 이름 중복 확인
-        if (userRepository.findByUsername(requestDto.getUsername()).isPresent()) {
-            throw new ResponseException("Username is already taken.");
-        }
-
         // 이메일 중복 확인
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            throw new ResponseException("Email is already registered.");
+            throw new ResponseException(ResponseCode.DUPLICATED_EMAIL);
         }
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         // 유저 생성 및 저장
-        User user = new User(requestDto.getUsername(), encodedPassword, requestDto.getEmail());
+        User user = requestDto.convertDtoToEntity(encodedPassword);
         userRepository.save(user);
     }
 
