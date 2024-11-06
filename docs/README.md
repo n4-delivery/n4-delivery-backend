@@ -1,26 +1,27 @@
- ![배민 사진 저장](https://github.com/user-attachments/assets/92ac11cb-5577-4093-9f68-2fc0ac94098d)  9조 아웃소싱 프로젝트 
 
-# 배달 웹 앱
+# 9조 아웃소싱 프로젝트
 
+
+## 1. 팀원 소개
 <table style="width:100%; text-align:center;">
   <tr>
     <td>
-      <img src="https://github.com/user-attachments/assets/4e2ea7a9-d257-4173-82be-b8fb6c457e2e" alt="서민기" style="width:100px; height:100px; border-radius:50%;"><br>
+      <img src="https://github.com/user-attachments/assets/01f3860d-b3d9-4ea6-ad3f-5a88dc9f716a" alt="서민기" style="width:100px; height:100px; border-radius:50%;"><br>
       <strong>팀장 서민기</strong><br>
       로그인 및 회원가입 기능 개발 
     </td>
     <td>
-      <img src="팀원2의_사진_URL" alt="김명훈" style="width:100px; height:100px; border-radius:50%;"><br>
+      <img src="https://github.com/user-attachments/assets/3a606862-5f64-421a-97dc-ae7f7fbe8621" alt="김명훈" style="width:100px; height:100px; border-radius:50%;"><br>
       <strong>팀원 김명훈</strong><br>
       메뉴 (생성,수정,삭제) 및 Docker설정 기능 개발
     </td>
     <td>
-      <img src="팀원3의_사진_URL" alt="이수빈" style="width:100px; height:100px; border-radius:50%;"><br>
+      <img src="https://github.com/user-attachments/assets/4e2ea7a9-d257-4173-82be-b8fb6c457e2e" alt="김도현" style="width:100px; height:100px; border-radius:50%;"><br>
       <strong>팀원 김도현</strong><br>
-      가게 생성 및 가게 정보 (수정,조회,삭제) 기능 개발
+      가게 생성 및 가게 정보 (수정,조회,삭제), 가게 단건 조회 기능 개발
     </td>
     <td>
-      <img src="팀원4의_사진_URL" alt="정하은" style="width:100px; height:100px; border-radius:50%;"><br>
+      <img src="https://github.com/user-attachments/assets/64829c86-6092-47a8-a7c2-209a4bf41e40" alt="김현정" style="width:100px; height:100px; border-radius:50%;"><br>
       <strong>팀원 김현정</strong><br>
       주문(요청, 조회, 상태 수정) 리뷰(생성, 조회, 수정, 삭제) 및 인증/인가
     </td>
@@ -29,48 +30,35 @@
 
 ## 2. 주요 백엔드 사용 기술
 
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/38b58c0d-ec0d-42a1-88aa-b516ad1b1a9b"/>
+</div>
+
 - **Spring Boot**: 애플리케이션의 주요 서버 사이드 프레임워크로 사용됩니다.
 - **JPA (Java Persistence API)**: 데이터베이스와의 상호작용을 관리하는 데 사용됩니다.
 - **MySQL**: 데이터 저장 및 관리에 사용되는 관계형 데이터베이스입니다.
 - **JWT (JSON Web Token)**: 사용자 인증 및 보안 관리를 위해 사용됩니다.
-- **Thymeleaf**: 서버 사이드 템플릿 엔진으로 웹 페이지를 동적으로 렌더링합니다.
 
-## 3. 주요 기능
+## 3. 패키지 구조
 
-### 3.1 사용자 관리
-- **회원 가입**: 이메일, 비밀번호, 이름 등을 입력하여 계정을 생성합니다.
-- **로그인/로그아웃**: 사용자는 이메일과 비밀번호로 로그인하고 로그아웃할 수 있습니다.
-- **사용자 정보 수정**: 비밀번호와 이메일 등을 수정할 수 있습니다.
-- **회원 탈퇴**: 사용자는 계정을 삭제할 수 있습니다.
+<div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/6b6a1c8c-15d4-45fa-a06c-47c0a3baf4df" width="50%" />
+</div>
 
-### 3.2 레스토랑 관리
-- **레스토랑 생성**: 레스토랑 운영자는 새로운 레스토랑을 등록할 수 있습니다.
-- **레스토랑 수정**: 레스토랑의 이름, 설명, 주소 등의 정보를 수정할 수 있습니다.
-- **레스토랑 삭제**: 레스토랑 운영자는 레스토랑을 폐업 처리할 수 있습니다.
+## 4. 기능 소개 
 
-### 3.3 메뉴 관리
-- **메뉴 추가**: 레스토랑 운영자는 새로운 메뉴 항목을 추가할 수 있습니다.
-- **메뉴 수정**: 기존 메뉴 항목을 수정할 수 있습니다.
-- **메뉴 삭제**: 메뉴 항목을 삭제할 수 있습니다.
 
-### 3.4 주문 관리
-- **주문 생성**: 사용자는 메뉴를 선택하고 주문을 생성할 수 있습니다.
-- **주문 확인**: 주문 내역을 확인할 수 있습니다.
-- **주문 취소**: 주문이 확정되지 않은 상태에서 취소할 수 있습니다.
+### 사장님 회원가입 시
 
-### 3.5 리뷰 기능
-- **리뷰 작성**: 사용자는 레스토랑에 대한 리뷰를 작성할 수 있습니다.
-- **리뷰 수정**: 작성한 리뷰를 수정할 수 있습니다.
-- **리뷰 삭제**: 작성한 리뷰를 삭제할 수 있습니다.
-- **리뷰 조회**: 사용자는 레스토랑별 리뷰를 조회할 수 있습니다.
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/5be1eed4-7f1f-4f6e-a572-ccff2a7ec4b0"/>
+</div>
 
-### 3.6 검색 및 필터링
-- **레스토랑 검색**: 특정 레스토랑을 검색할 수 있습니다.
-- **메뉴 검색**: 특정 메뉴 항목을 검색할 수 있습니다.
-- **카테고리 필터**: 레스토랑과 메뉴를 카테고리별로 필터링할 수 있습니다.
+<hr style="border: 1px solid #ccc; width: 80%; margin: 20px auto;">
 
-## 4. 설치 방법
+### 유저 회원가입 시
 
-1. 프로젝트 클론:
-   ```bash
-   git clone https://github.com/{your-username}/{repository-name}.git
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/adb918c9-c0ee-4599-bd09-4f0e5fc3b442"/>
+</div>
+
