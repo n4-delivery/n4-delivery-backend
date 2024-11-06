@@ -1,6 +1,5 @@
 package com.sparta.n4delivery;
 
-import com.sparta.n4delivery.enums.StoreState;
 import com.sparta.n4delivery.enums.UserType;
 import com.sparta.n4delivery.menu.entity.Menu;
 import com.sparta.n4delivery.menu.repository.MenuRepository;
