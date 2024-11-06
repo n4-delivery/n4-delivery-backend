@@ -57,4 +57,8 @@ public class User extends Timestamped {
             orphanRemoval = true)
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
+    }
 }
