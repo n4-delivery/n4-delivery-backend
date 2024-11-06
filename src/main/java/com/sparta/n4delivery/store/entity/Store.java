@@ -42,10 +42,6 @@ public class Store {
     @Column(nullable = false)
     private Integer minimumAmount;
 
-    @Enumerated(value = EnumType.STRING)
-    @Builder.Default
-    private StoreState state = StoreState.OPEN;
-
     @Column
     private LocalDateTime deletedAt;
 

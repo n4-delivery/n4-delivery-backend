@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findAllByUser(User user);
 
-    Page<Store> findByNameContaining(String name, Pageable pageable);
-
     Page<Store> findByNameContainingAndDeletedAtIsNull(String name, Pageable pageable);
 
     Optional<Store> findByIdAndDeletedAtIsNull(Long id);

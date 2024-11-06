@@ -47,7 +47,6 @@ public class StoreService {
                 .openedAt(LocalTime.parse(storeDto.getOpenedAt()))
                 .closedAt(LocalTime.parse(storeDto.getClosedAt()))
                 .minimumAmount(storeDto.getMinimumAmount())
-                .state(StoreState.OPEN)
                 .user(user)
                 .build();
 
@@ -59,8 +58,7 @@ public class StoreService {
                 store.getName(),
                 store.getOpenedAt().toString(),
                 store.getClosedAt().toString(),
-                store.getMinimumAmount(),
-                store.getState().name()
+                store.getMinimumAmount()
         );
     }
 
@@ -83,15 +81,14 @@ public class StoreService {
                 store.getName(),
                 store.getOpenedAt().toString(),
                 store.getClosedAt().toString(),
-                store.getMinimumAmount(),
-                store.getState().name()
+                store.getMinimumAmount()
         );
     }
 
     // 다건 조회 메서드
     public PaginatedStoreResponse getStores(String name, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        Page<Store> stores = storeRepository.findByNameContaining(name, pageRequest);
+        Page<Store> stores = storeRepository.findByNameContainingAndDeletedAtIsNull(name, pageRequest);
 
         List<StoreSummaryResponse> storeContents = stores.getContent().stream()
                 .map(store -> new StoreSummaryResponse(
@@ -99,8 +96,7 @@ public class StoreService {
                         store.getName(),
                         store.getOpenedAt().toString(),
                         store.getClosedAt().toString(),
-                        store.getMinimumAmount(),
-                        store.getState().name()
+                        store.getMinimumAmount()
                 )).collect(Collectors.toList());
 
         return new PaginatedStoreResponse(
@@ -113,7 +109,7 @@ public class StoreService {
 
     // 단건 조회 메서드
     public StoreDetailResponse getStoreDetail(Long storeId) {
-        Store store = storeRepository.findById(storeId)
+        Store store = storeRepository.findByIdAndDeletedAtIsNull(storeId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NOT_FOUND_STORE));
 
         return new StoreDetailResponse(
@@ -122,7 +118,6 @@ public class StoreService {
                 store.getOpenedAt().toString(),
                 store.getClosedAt().toString(),
                 store.getMinimumAmount(),
-                store.getState().name(),
                 store.getMenus().stream()
                         .map(menu -> new MenuResponseDto(menu.getId(), menu.getName(), menu.getPrice()))
                         .collect(Collectors.toList())

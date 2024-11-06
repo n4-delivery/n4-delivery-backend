@@ -156,7 +156,7 @@ public class OrderService {
      * @throws ResponseException 주문 생성 불가능한 경우 예외를 던집니다.
      */
     private void validateOrderForCreate(Store store) {
-        if (store.getState() == StoreState.CLOSE) {
+        if (store.getDeletedAt() != null) {
             throw new ResponseException(ResponseCode.CLOSED_STORE);
         }
 
