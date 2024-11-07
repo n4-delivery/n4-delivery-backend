@@ -57,8 +57,11 @@
 </div>
 
 ## 와이어 프레임
+<img src="images/wireframe1.png"/>
+<img src="images/wireframe2.png"/>
 
 ## 4. ERD 다이어그램
+<img src="images/erd.png"/>
 
 ## 5. API 명세서
 <table>
