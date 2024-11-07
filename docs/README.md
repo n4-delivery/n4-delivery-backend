@@ -1,7 +1,5 @@
 
 # 9조 아웃소싱 프로젝트
-
-
 ## 1. 팀원 소개
 <table style="width:100%; text-align:center;">
   <tr>
